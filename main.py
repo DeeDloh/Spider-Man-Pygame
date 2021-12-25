@@ -50,30 +50,34 @@ def terminate():
 
 
 def start_screen():
-    intro_text = ["ЗАСТАВКА", "",
-                  "Правила игры",
-                  "Если в правилах несколько строк,",
-                  "приходится выводить их построчно"]
+    FPS = 12
+    intro_text = ["Привет игрок!",
+                  "Это улучшенная версия игры",
+                  "Spider-man PyQt на Pygame",
+                  "Приятной игры!",
+                  "",
+                  "Авторы:",
+                  "Венков Кирилл и Егор Захаров", ""
+                  "ладно"
+                  ]
 
-    fon = pygame.transform.scale(load_image('fon.png'), (WIDTH, HEIGHT))
+    fon = pygame.transform.scale(load_image('start.jpg'), (WIDTH, HEIGHT))
 
-    font = pygame.font.Font(None, 30)
+    font = pygame.font.Font("./data/UpheavalPro.ttf", 30)
 
-    chel = AnimatedSprite(load_image("ladno2.png"), 7, 2, 0, 0)
+    chel = AnimatedSprite(load_image("animated_rabbit.png"), 7, 2, 800, -100)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
-
             elif event.type == pygame.KEYDOWN or \
                     event.type == pygame.MOUSEBUTTONDOWN:
-
                 return  # начинаем игру
         screen.fill(pygame.Color("black"))
-        screen.blit(fon, (0, 0))
+        screen.blit(fon, (0, -1))
         all_sprites.draw(screen)
         all_sprites.update()
-        text_coord = 50
+        text_coord = 470
         for line in intro_text:
             string_rendered = font.render(line, 1, pygame.Color('white'))
             intro_rect = string_rendered.get_rect()
@@ -88,12 +92,11 @@ def start_screen():
 
 if __name__ == '__main__':
     pygame.init()
-    FPS = 10
-    size = WIDTH, HEIGHT = 600, 600
+    FPS = 60
+    size = WIDTH, HEIGHT = 1280, 720
     screen = pygame.display.set_mode(size)
-    pygame.display.set_caption('Столкновение шариков')
+    pygame.display.set_caption('ладно')
     clock = pygame.time.Clock()
-
 
 
     screen.fill((255, 255, 255))
@@ -104,7 +107,6 @@ if __name__ == '__main__':
     tiles_group = pygame.sprite.Group()
     player_group = pygame.sprite.Group()
     start_screen()
-    chel = AnimatedSprite(load_image("ladno2.png"), 7, 2, 0, 0)
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
