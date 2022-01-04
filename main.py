@@ -1,30 +1,53 @@
 import os
 import sys
+import sqlite3
+from AnimatedSprite import AnimatedSprite
 
 import pygame
 
+def start_screen():
+    FPS = 12
+    intro_text = ["Привет игрок!",
+                  "Это улучшенная версия игры",
+                  "Spider-man PyQt на Pygame",
+                  "Приятной игры!",
+                  "",
+                  "Авторы:",
+                  "Венков Кирилл и Егор Захаров", ""
+                  "ладно"
+                  ]
 
-class AnimatedSprite(pygame.sprite.Sprite):
-    def __init__(self, sheet, columns, rows, x, y):
-        super().__init__(all_sprites)
-        self.frames = []
-        self.cut_sheet(sheet, columns, rows)
-        self.cur_frame = 0
-        self.image = self.frames[self.cur_frame]
-        self.rect = self.rect.move(x, y)
+    fon = pygame.transform.scale(load_image('start.jpg'), (WIDTH, HEIGHT))
+    f1 = pygame.font.Font("./data/UpheavalPro.ttf", 30)
 
-    def cut_sheet(self, sheet, columns, rows):
-        self.rect = pygame.Rect(0, 0, sheet.get_width() // columns,
-                                sheet.get_height() // rows)
-        for j in range(rows):
-            for i in range(columns):
-                frame_location = (self.rect.w * i, self.rect.h * j)
-                self.frames.append(sheet.subsurface(pygame.Rect(
-                    frame_location, self.rect.size)))
 
-    def update(self):
-        self.cur_frame = (self.cur_frame + 1) % len(self.frames)
-        self.image = self.frames[self.cur_frame]
+    font = pygame.font.Font("./data/UpheavalPro.ttf", 30)
+    chel = AnimatedSprite(load_image("animated_rabbit.png"), 7, 2, 800, -100, all_sprites)
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+
+                    return  # начинаем игру
+        screen.fill(pygame.Color("black"))
+        screen.blit(fon, (0, -1))
+        all_sprites.draw(screen)
+        all_sprites.update()
+        text1 = f1.render('Нажми Enter чтобы продолжить', True, (255, 255, 255))
+        screen.blit(text1, (375, 200))
+        text_coord = 470
+        for line in intro_text:
+            string_rendered = font.render(line, 1, pygame.Color('white'))
+            intro_rect = string_rendered.get_rect()
+            text_coord += 10
+            intro_rect.top = text_coord
+            intro_rect.x = 10
+            text_coord += intro_rect.height
+            screen.blit(string_rendered, intro_rect)
+        pygame.display.flip()
+        clock.tick(FPS)
 
 
 def load_image(name, colorkey=None):
@@ -49,46 +72,6 @@ def terminate():
     sys.exit()
 
 
-def start_screen():
-    FPS = 12
-    intro_text = ["Привет игрок!",
-                  "Это улучшенная версия игры",
-                  "Spider-man PyQt на Pygame",
-                  "Приятной игры!",
-                  "",
-                  "Авторы:",
-                  "Венков Кирилл и Егор Захаров", ""
-                  "ладно"
-                  ]
-
-    fon = pygame.transform.scale(load_image('start.jpg'), (WIDTH, HEIGHT))
-
-    font = pygame.font.Font("./data/UpheavalPro.ttf", 30)
-
-    chel = AnimatedSprite(load_image("animated_rabbit.png"), 7, 2, 800, -100)
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                terminate()
-            elif event.type == pygame.KEYDOWN or \
-                    event.type == pygame.MOUSEBUTTONDOWN:
-                return  # начинаем игру
-        screen.fill(pygame.Color("black"))
-        screen.blit(fon, (0, -1))
-        all_sprites.draw(screen)
-        all_sprites.update()
-        text_coord = 470
-        for line in intro_text:
-            string_rendered = font.render(line, 1, pygame.Color('white'))
-            intro_rect = string_rendered.get_rect()
-            text_coord += 10
-            intro_rect.top = text_coord
-            intro_rect.x = 10
-            text_coord += intro_rect.height
-            screen.blit(string_rendered, intro_rect)
-        pygame.display.flip()
-        clock.tick(FPS)
-
 
 if __name__ == '__main__':
     pygame.init()
@@ -98,15 +81,12 @@ if __name__ == '__main__':
     pygame.display.set_caption('ладно')
     clock = pygame.time.Clock()
 
-
     screen.fill((255, 255, 255))
     player = None
     running = True
-
     all_sprites = pygame.sprite.Group()
-    tiles_group = pygame.sprite.Group()
-    player_group = pygame.sprite.Group()
     start_screen()
+
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
