@@ -4,6 +4,9 @@ import sqlite3
 from AnimatedSprite import AnimatedSprite
 
 import pygame
+import pygame_widgets
+from pygame_widgets.button import Button
+
 
 def start_screen():
     FPS = 12
@@ -19,7 +22,6 @@ def start_screen():
 
     fon = pygame.transform.scale(load_image('start.jpg'), (WIDTH, HEIGHT))
     f1 = pygame.font.Font("./data/UpheavalPro.ttf", 30)
-
 
     font = pygame.font.Font("./data/UpheavalPro.ttf", 30)
     chel = AnimatedSprite(load_image("animated_rabbit.png"), 7, 2, 800, -100, all_sprites)
@@ -50,12 +52,16 @@ def start_screen():
         clock.tick(FPS)
 
 
+def terminate():
+    pygame.quit()
+    sys.exit()
+
+
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
-    # если файл не существует, то выходим
     if not os.path.isfile(fullname):
         print(f"Файл с изображением '{fullname}' не найден")
-        sys.exit()
+        terminate()
     image = pygame.image.load(fullname)
     if colorkey is not None:
         image = image.convert()
@@ -66,12 +72,34 @@ def load_image(name, colorkey=None):
         image = image.convert_alpha()
     return image
 
+def clicked_func(text, bool=False):
+    if bool:
+        print(text)
 
-def terminate():
-    pygame.quit()
-    sys.exit()
-
-
+def second_screen():
+    fon = pygame.transform.scale(load_image('fon_main.jpg'), (WIDTH, HEIGHT))
+    text_but = ['Играть', 'Таблица лидеров', 'Карты', 'Выйти']
+    func = ['1', '2', '3', '4']
+    font_all = pygame.font.Font("./data/UpheavalPro.ttf", 30)
+    f1 = pygame.font.Font("./data/UpheavalPro.ttf", 70)
+    for i in range(4):
+        button = Button(screen, 490, 300 + i * 100, 300, 75, text=text_but[i], margin=20, font=font_all,
+        inactiveColour=(220, 20, 60), hoverColour=(65, 105, 225), pressedColour=(75, 0, 130),
+        onClick=(lambda n=func[i]: clicked_func(n, True))
+        )
+    while True:
+        events = pygame.event.get()
+        for event in events:
+            if event.type == pygame.QUIT:
+                terminate()
+        pygame.display.flip()
+        screen.blit(fon, (0, -1))
+        text1 = f1.render('Spider-man cards', True, (255, 192, 203))
+        screen.blit(text1, (315, 100))
+        text1 = f1.render('Pygame edition', True, (255, 192, 203))
+        screen.blit(text1, (360, 200))
+        pygame_widgets.update(events)  # Call once every loop to allow widgets to render and listen
+        pygame.display.update()
 
 if __name__ == '__main__':
     pygame.init()
@@ -81,18 +109,9 @@ if __name__ == '__main__':
     pygame.display.set_caption('ладно')
     clock = pygame.time.Clock()
 
-    screen.fill((255, 255, 255))
+    screen.fill((0, 0, 0))
     player = None
-    running = True
     all_sprites = pygame.sprite.Group()
-    start_screen()
+    #start_screen()
+    second_screen()
 
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-        screen.fill(pygame.Color("black"))
-
-        pygame.display.flip()
-        clock.tick(FPS)
-    pygame.quit()
