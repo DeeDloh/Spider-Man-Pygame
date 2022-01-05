@@ -72,20 +72,25 @@ def load_image(name, colorkey=None):
         image = image.convert_alpha()
     return image
 
-def clicked_func(text, bool=False):
-    if bool:
-        print(text)
+def clicked_func(n):
+    if n == 4:
+        terminate()
+    else:
+        print(n)
 
 def second_screen():
     fon = pygame.transform.scale(load_image('fon_main.jpg'), (WIDTH, HEIGHT))
     text_but = ['Играть', 'Таблица лидеров', 'Карты', 'Выйти']
-    func = ['1', '2', '3', '4']
+    func = [1, 2, 3, 4]
+    color = [(0, 0, 0), (75, 0, 130), (128, 0, 128)]
+    cords_1 = [(317, 102), (316, 101), (315, 100)]
+    cords_2 = [(362, 202), (361, 201), (360, 200)]
     font_all = pygame.font.Font("./data/UpheavalPro.ttf", 30)
     f1 = pygame.font.Font("./data/UpheavalPro.ttf", 70)
     for i in range(4):
         button = Button(screen, 490, 300 + i * 100, 300, 75, text=text_but[i], margin=20, font=font_all,
         inactiveColour=(220, 20, 60), hoverColour=(65, 105, 225), pressedColour=(75, 0, 130),
-        onClick=(lambda n=func[i]: clicked_func(n, True))
+        onClick=(lambda n=func[i]: clicked_func(n))
         )
     while True:
         events = pygame.event.get()
@@ -94,12 +99,18 @@ def second_screen():
                 terminate()
         pygame.display.flip()
         screen.blit(fon, (0, -1))
-        text1 = f1.render('Spider-man cards', True, (255, 192, 203))
-        screen.blit(text1, (315, 100))
-        text1 = f1.render('Pygame edition', True, (255, 192, 203))
-        screen.blit(text1, (360, 200))
+        for i in range(3):
+            text1 = f1.render('Spider-man cards', True, color[i])
+            screen.blit(text1, cords_1[i])
+            text2 = f1.render('Pygame edition', True, color[i])
+            screen.blit(text2, cords_2[i])
         pygame_widgets.update(events)  # Call once every loop to allow widgets to render and listen
         pygame.display.update()
+
+
+def cards_screen():
+    pass
+
 
 if __name__ == '__main__':
     pygame.init()
