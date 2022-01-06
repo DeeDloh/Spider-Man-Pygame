@@ -1,6 +1,9 @@
 import os
 import sys
 import sqlite3
+
+from pygame_widgets.slider import Slider
+
 from AnimatedSprite import AnimatedSprite
 
 import pygame
@@ -20,19 +23,19 @@ def start_screen():
                   "ладно"
                   ]
 
-    fon = pygame.transform.scale(load_image('start.jpg'), (WIDTH, HEIGHT))
+    fon = pygame.transform.scale(load_image('./data/start.jpg'), (WIDTH, HEIGHT))
     f1 = pygame.font.Font("./data/UpheavalPro.ttf", 30)
 
     font = pygame.font.Font("./data/UpheavalPro.ttf", 30)
-    chel = AnimatedSprite(load_image("animated_rabbit.png"), 7, 2, 800, -100, all_sprites)
+    chel = AnimatedSprite(load_image("./data/animated_rabbit.png"), 7, 2, 800, -100, all_sprites)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
+                    return
 
-                    return  # начинаем игру
         screen.fill(pygame.Color("black"))
         screen.blit(fon, (0, -1))
         all_sprites.draw(screen)
@@ -58,10 +61,7 @@ def terminate():
 
 
 def load_image(name, colorkey=None):
-    fullname = os.path.join('data', name)
-    if not os.path.isfile(fullname):
-        print(f"Файл с изображением '{fullname}' не найден")
-        terminate()
+    fullname = name
     image = pygame.image.load(fullname)
     if colorkey is not None:
         image = image.convert()
@@ -75,11 +75,11 @@ def load_image(name, colorkey=None):
 def clicked_func(n):
     if n == 4:
         terminate()
-    else:
-        print(n)
+    elif n == 3:
+        cards_screen()
 
 def second_screen():
-    fon = pygame.transform.scale(load_image('fon_main.jpg'), (WIDTH, HEIGHT))
+    fon = pygame.transform.scale(load_image('./data/fon_main.jpg'), (WIDTH, HEIGHT))
     text_but = ['Играть', 'Таблица лидеров', 'Карты', 'Выйти']
     func = [1, 2, 3, 4]
     color = [(0, 0, 0), (75, 0, 130), (128, 0, 128)]
@@ -109,7 +109,28 @@ def second_screen():
 
 
 def cards_screen():
-    pass
+    cards = []
+    for i in range(1, 40):
+        card = pygame.transform.scale(load_image(f'./data/kartinki cards/{i}.jpg'), (213, 320))
+        cards.append(card)
+    fon = pygame.transform.scale(load_image('./data/fon_main.jpg'), (WIDTH, HEIGHT))
+    slider = Slider(screen, 100, 100, 800, 40, min=0, max=99, step=1)
+    while True:
+        events = pygame.event.get()
+        for event in events:
+            if event.type == pygame.QUIT:
+                terminate()
+        pygame.display.flip()
+        screen.fill((0, 0, 0))
+        screen.blit(fon, (0, -1))
+        for cd in range(len(cards)):
+            if cd < 30:
+                screen.blit(cards[cd], (10 + 223 * cd, 10))
+            else:
+                screen.blit(cards[cd], (10 + 223 * (cd - 30), 340))
+        slider.listen(events)
+        slider.draw()
+        pygame.display.update()
 
 
 if __name__ == '__main__':
