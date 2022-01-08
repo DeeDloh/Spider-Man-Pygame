@@ -1,6 +1,6 @@
 import pygame
 
-def load_image(name, colorkey=None):
+def load_image(name, colorkey=None, scale=(0, 0)):
     fullname = name
     image = pygame.image.load(fullname)
     if colorkey is not None:
@@ -10,4 +10,6 @@ def load_image(name, colorkey=None):
         image.set_colorkey(colorkey)
     else:
         image = image.convert_alpha()
+    if scale != (0, 0):
+        image = pygame.transform.scale(image, scale)
     return image

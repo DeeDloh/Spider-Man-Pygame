@@ -15,7 +15,6 @@ import pygame
 import pygame_widgets
 
 
-
 def start_screen():
     FPS = 12
     intro_text = ["Привет игрок!",
@@ -58,8 +57,6 @@ def start_screen():
             screen.blit(string_rendered, intro_rect)
         pygame.display.flip()
         clock.tick(FPS)
-
-
 
 
 if __name__ == '__main__':

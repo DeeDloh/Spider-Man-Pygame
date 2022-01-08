@@ -5,6 +5,8 @@ from pygame_widgets.button import Button
 from terminate import terminate
 from load_image import load_image
 from cards_screen import cards_screen
+from rules_screen import rules_screen
+
 
 def menu(screen, WIDTH=1280, HEIGHT=720):
     fon = pygame.transform.scale(load_image('./data/fon_main.jpg'), (WIDTH, HEIGHT))
@@ -38,14 +40,18 @@ def menu(screen, WIDTH=1280, HEIGHT=720):
         pygame_widgets.update(events)
         pygame.display.update()
 
+
 def clicked_func(n, screen, buttons):
+    for i in buttons: # вынес скрытие кнопок сюда, т.к. по нажатию любой кнопки в гл. меню нам надо скрывать кнопки
+        i._hidden = True
+        i._disabled = True
+
     if n == 4:
         terminate()
     elif n == 3:
-        for i in buttons:
-            i._hidden = True
-            i._disabled = True
         cards_screen(screen)
+    elif n == 1:
+        rules_screen(screen)
 
 
 if __name__ == '__main__':

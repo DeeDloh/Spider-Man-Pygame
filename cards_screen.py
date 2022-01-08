@@ -31,6 +31,7 @@ def cards_screen(screen, WIDTH=1280, HEIGHT=720):
         pygame_widgets.update(events)
         pygame.display.update()
 
+
 if __name__ == '__main__':
     pygame.init()
     FPS = 60
