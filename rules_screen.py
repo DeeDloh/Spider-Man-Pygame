@@ -11,22 +11,22 @@ import os
 
 class RuleViewer:
     def __init__(self, screen, x, y, splav=0):
-        bord_x, bord_y = x+1, y+1
-        ins_x, ins_y = x+3, y+3
-        w, h = 399, 599
+        bord_x, bord_y = x + 1, y + 1
+        ins_x, ins_y = x + 3, y + 3
+        w, h = 400, 600
 
         pygame.draw.rect(screen, 'black', (bord_x, bord_y, w, h), 3)
-        screen.fill('white', (ins_x, ins_y, w-4, h-4))
+        screen.fill('white', (ins_x, ins_y, w - 4, h - 4))
 
-        self.rule_txt_disp = TextBox(screen, ins_x+10, ins_y+10, w-24, h-94)
-        back_btn = Button(screen, ins_x+10, ins_y+self.rule_txt_disp.getHeight()+15, 65, 65, borderThickness=3)
-        self.rule_name_disp = TextBox(screen, back_btn.getX()+70, back_btn.getY(), 235, 65, borderThickness=3)
-        forw_btn = Button(screen, self.rule_name_disp.getX()+240, back_btn.getY(), 65, 65, borderThickness=3)
+        self.rule_txt_disp = TextBox(screen, ins_x + 10, ins_y + 10, w - 24, h - 94)
+        back_btn = Button(screen, ins_x + 10, ins_y + self.rule_txt_disp.getHeight() + 15, 65, 65, borderThickness=3)
+        self.rule_name_disp = TextBox(screen, back_btn.getX() + 70, back_btn.getY(), 235, 65, borderThickness=3)
+        forw_btn = Button(screen, self.rule_name_disp.getX() + 240, back_btn.getY(), 65, 65, borderThickness=3)
 
         back_btn.setImage(load_image('data/back.png', scale=(65, 65)))
         forw_btn.setImage(load_image('data/forward.png', scale=(65, 65)))
 
-    # подключаем правила, которые будут отображться (для сплава или обычные)
+        # подключаем правила, которые будут отображться (для сплава или обычные)
         self.rule_name, self.rule_txt = [], []
         fold = 'pravila' if not splav else 'dla_splav'
         rule_files_names = os.listdir(fold)
@@ -65,7 +65,7 @@ def rules_screen(screen, WIDTH=1280, HEIGHT=720):
         pygame.display.flip()
         screen.fill((0, 0, 0))
         screen.blit(fon, (0, -1))
-        r = RuleViewer(screen, 10, 110)
+
         pygame_widgets.update(events)
         pygame.display.update()
 

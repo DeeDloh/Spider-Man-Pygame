@@ -4,8 +4,9 @@ from pygame_widgets.button import Button
 
 from terminate import terminate
 from load_image import load_image
-from cards_screen import cards_screen
+import cards
 from rules_screen import rules_screen
+
 
 
 def menu(screen, WIDTH=1280, HEIGHT=720):
@@ -38,7 +39,7 @@ def menu(screen, WIDTH=1280, HEIGHT=720):
             screen.blit(text2, cords_2[i])
 
         pygame_widgets.update(events)
-        pygame.display.update()
+        pygame.display.flip()
 
 
 def clicked_func(n, screen, buttons):
@@ -49,7 +50,7 @@ def clicked_func(n, screen, buttons):
     if n == 4:
         terminate()
     elif n == 3:
-        cards_screen(screen)
+        cards.cards_screen(screen)
     elif n == 1:
         rules_screen(screen)
 

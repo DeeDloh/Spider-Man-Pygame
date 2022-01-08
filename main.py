@@ -1,21 +1,13 @@
-import os
-import sys
-import sqlite3
-
-
 from AnimatedSprite import AnimatedSprite
-from pygame_widgets.button import Button
 
 from load_image import load_image
-from cards_screen import cards_screen
 from terminate import terminate
 from main_menu import menu
 
 import pygame
-import pygame_widgets
 
 
-def start_screen():
+def start_screen(all_sprites):
     FPS = 12
     intro_text = ["Привет игрок!",
                   "Это улучшенная версия игры",
@@ -38,6 +30,7 @@ def start_screen():
                 terminate()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
+                    #all_sprites = pygame.sprite.Group()
                     return
 
         screen.fill(pygame.Color("black"))
@@ -70,6 +63,5 @@ if __name__ == '__main__':
     screen.fill((0, 0, 0))
     player = None
     all_sprites = pygame.sprite.Group()
-    start_screen()
+    start_screen(all_sprites)
     menu(screen)
-
