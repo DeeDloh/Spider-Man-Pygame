@@ -20,8 +20,6 @@ def start_screen(all_sprites):
                   ]
 
     fon = pygame.transform.scale(load_image('./data/start.jpg'), (WIDTH, HEIGHT))
-    f1 = pygame.font.Font("./data/UpheavalPro.ttf", 30)
-
     font = pygame.font.Font("./data/UpheavalPro.ttf", 30)
     chel = AnimatedSprite(load_image("./data/animated_rabbit.png"), 7, 2, 800, -100, all_sprites)
     while True:
@@ -30,14 +28,13 @@ def start_screen(all_sprites):
                 terminate()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
-                    #all_sprites = pygame.sprite.Group()
                     return
 
         screen.fill(pygame.Color("black"))
         screen.blit(fon, (0, -1))
         all_sprites.draw(screen)
         all_sprites.update()
-        text1 = f1.render('Нажми Enter чтобы продолжить', True, (255, 255, 255))
+        text1 = font.render('Нажми Enter чтобы продолжить', True, (255, 255, 255))
         screen.blit(text1, (375, 200))
         text_coord = 470
         for line in intro_text:
@@ -64,4 +61,5 @@ if __name__ == '__main__':
     player = None
     all_sprites = pygame.sprite.Group()
     start_screen(all_sprites)
+    all_sprites = pygame.sprite.Group()
     menu(screen)

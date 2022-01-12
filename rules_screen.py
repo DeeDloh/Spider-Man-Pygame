@@ -22,15 +22,15 @@ class RuleViewer:
 
         self.text_rect = (ins_x, ins_y, w - 4, h - 4)
 
-        self.rule_txt_disp = DisplayText(rule_surf, (ins_x + 10, ins_y + 10), width=w - 24, height=h - 94,
-                                         fontName="./data/UpheavalPro.ttf", fontSize=23)
+        self.rule_txt_disp = DisplayText(screen, (ins_x + 10, ins_y + 10), width=w - 24, height=h - 94,
+                                         fontName="./data/UpheavalPro.ttf", fontSize=16)
         back_btn = Button(screen, ins_x + 10, ins_y + self.rule_txt_disp.getRect()[3] + 15, 65, 65, borderThickness=3,
-                          onClick=(lambda n=0: self.change_rules(n)))
-        self.rule_name_disp = DisplayText(rule_surf, (back_btn.getX() + 70, back_btn.getY()+25), width=235, height=65,
+                          onClick=(lambda n=0: self.change_rules(screen, n)))
+        self.rule_name_disp = DisplayText(screen, (back_btn.getX() + 70, back_btn.getY()+25), width=235, height=65,
                                           fontName="./data/UpheavalPro.ttf", fontSize=30, justified='center')
         self.r_n_d_loc = self.rule_name_disp.getX(), self.rule_name_disp.getY()
         forw_btn = Button(screen, back_btn.getX() + 70 + 240, back_btn.getY(), 65, 65, borderThickness=3,
-                          onClick=(lambda n=1: self.change_rules(n)))
+                          onClick=(lambda n=1: self.change_rules(screen, n)))
 
         back_btn.setImage(load_image('data/back.png', scale=(65, 65)))
         forw_btn.setImage(load_image('data/forward.png', scale=(65, 65)))
@@ -55,23 +55,22 @@ class RuleViewer:
 
         self.disp_len = len(self.rule_name) - 1
         self.disp_id = -1
-        self.change_rules(1)
+        self.change_rules(screen, 1)
 
-    def change_rules(self, direction):  # переключение правил стрелками
-        global font, fon
+    def change_rules(self, screen, direction):  # переключение правил стрелками
         self.disp_id = self.disp_id + 1 if direction else self.disp_id - 1
         if self.disp_id < 0:
             self.disp_id = self.disp_len
         elif self.disp_id > self.disp_len:
             self.disp_id = 0
 
-        rule_surf.fill('white', self.text_rect)
+        screen.fill('white', self.text_rect)
 
         if '\n' in self.rule_name[self.disp_id]:
             self.rule_name_disp.moveY(-18)
         self.rule_name_disp.setValue(self.rule_name[self.disp_id])
         self.rule_txt_disp.setValue(self.rule_txt[self.disp_id])
-        rule_surf.blit(rule_surf, (0, 0))
+        screen.blit(screen, (0, 0))
 
         self.rule_name_disp.draw()
         self.rule_txt_disp.draw()
@@ -79,29 +78,35 @@ class RuleViewer:
 
 
 def rules_screen(screen, WIDTH=1280, HEIGHT=720):
-    global fon
+    fon = pygame.transform.scale(load_image('./data/fon_main.jpg'), (WIDTH, HEIGHT))
     screen.fill((0, 0, 0))
-    screen.blit(fon, (0, -1))
+    screen.blit(fon, (0, 0))
 
-    choose_rules_label = DisplayText(screen, (0, 0), fontName="./data/UpheavalPro.ttf", fontSize=40,
-                                     value='Выберите\nправила игры:', justified='center')
-    choose_rules_label.setLoc(((415-choose_rules_label.getRect()[2])//2, (105-choose_rules_label.getRect()[3])//2))
-    choose_rules_label.draw()
 
-    choose_splav_label = DisplayText(screen, (0, 0), fontName="./data/UpheavalPro.ttf", fontSize=40,
-                                     value='Выберите\nправила\nдля сплава:', justified='center')
-    choose_splav_label.setLoc(((415-choose_splav_label.getRect()[2])//2+865, (105-choose_splav_label.getRect()[3])//2))
-    choose_splav_label.draw()
+    color = [(0, 0, 0), (75, 0, 130), (128, 0, 128)]
+    for i in range(3):
+        choose_rules_label = DisplayText(screen, (55 - 1 * i, 22 - 1 * i),
+                                         fontName="./data/UpheavalPro.ttf", fontSize=40,
+                                         value='Выберите\nправила игры:',
+                                         justified='center', textColor=color[i])
+
+        choose_rules_label.draw()
+        choose_rules_label = DisplayText(screen, (55 - 1 * i + 865, 22 - 1 * i),
+                                         fontName="./data/UpheavalPro.ttf", fontSize=40,
+                                         value='Выберите\nправила\nдля сплава',
+                                         justified='center', textColor=color[i])
+
+        choose_rules_label.draw()
 
     game_rules = RuleViewer(screen, 15, 105, 'pravila')
     splav_rules = RuleViewer(screen, 865, 105, 'dla_splav')
+    text = [('Выберите', 'правила игры:'), ('123',)]
     while True:
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.QUIT:
                 terminate()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                print(event.pos)
+
 
         pygame.display.flip()
         pygame_widgets.update(events)
@@ -115,7 +120,7 @@ if __name__ == '__main__':
     size = WIDTH, HEIGHT = 1280, 720
     screen = pygame.display.set_mode(size)
     rule_surf = pygame.display.set_mode(size)
-    fon = pygame.transform.scale(load_image('./data/fon_main.jpg'), (WIDTH, HEIGHT))
+
     pygame.display.set_caption('хуядно')
     clock = pygame.time.Clock()
     rules_screen(screen)

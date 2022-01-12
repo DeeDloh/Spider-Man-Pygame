@@ -5,7 +5,7 @@ from pygame_widgets.button import Button
 from terminate import terminate
 from load_image import load_image
 import cards
-from rules_screen import rules_screen
+import rules_screen
 
 
 
@@ -52,7 +52,7 @@ def clicked_func(n, screen, buttons):
     elif n == 3:
         cards.cards_screen(screen)
     elif n == 1:
-        rules_screen(screen)
+        rules_screen.rules_screen(screen)
 
 
 if __name__ == '__main__':
