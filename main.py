@@ -2,7 +2,7 @@ from AnimatedSprite import AnimatedSprite
 
 from load_image import load_image
 from terminate import terminate
-from main_menu import menu
+from main_menu import Menu
 
 import pygame
 
@@ -28,6 +28,7 @@ def start_screen(all_sprites):
                 terminate()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
+                    fon = 1
                     return
 
         screen.fill(pygame.Color("black"))
@@ -56,10 +57,21 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption('ладно')
     clock = pygame.time.Clock()
+    fon = pygame.transform.scale(load_image('./data/fon_main.jpg'), (WIDTH, HEIGHT))
 
     screen.fill((0, 0, 0))
     player = None
     all_sprites = pygame.sprite.Group()
     start_screen(all_sprites)
     all_sprites = pygame.sprite.Group()
-    menu(screen)
+
+
+    menu = Menu(screen)
+    while True:
+        events = pygame.event.get()
+        for event in events:
+            if event.type == pygame.QUIT:
+                terminate()
+        screen.blit(fon, (0, 0))
+        menu.update(events)
+        pygame.display.flip()
