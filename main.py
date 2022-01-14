@@ -67,6 +67,7 @@ if __name__ == '__main__':
 
 
     menu = Menu(screen)
+    menu.enabled_button()
     while True:
         events = pygame.event.get()
         for event in events:

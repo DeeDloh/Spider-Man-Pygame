@@ -35,6 +35,7 @@ class Menu:
         if n == 4:
             terminate()
         elif n == 3:
+            self.cards.enabled_button()
             while True:
                 events = pygame.event.get()
                 for event in events:
@@ -42,8 +43,10 @@ class Menu:
                         terminate()
                 self.screen.blit(self.fon, (0, 0))
                 if self.cards.update(events) == 1:
-                    return
+                    break
                 pygame.display.flip()
+
+            self.enabled_button()
         elif n == 1:
             while True:
                 events = pygame.event.get()
@@ -52,7 +55,7 @@ class Menu:
                         terminate()
                 self.screen.blit(self.fon, (0, 0))
                 if self.rules.update(events) == 1:
-                    return
+                    break
                 pygame.display.flip()
 
     def disabled_button(self):

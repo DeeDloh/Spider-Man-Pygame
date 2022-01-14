@@ -151,7 +151,8 @@ class Rules_Screen:
         self.back = Button(screen, 500, 670, 100, 40, inactiveColour=(187, 143, 206), hoverColour=(165, 105, 189),
                         pressedColour=(125, 60, 152), text=' <-', font=pygame.font.Font("./data/UpheavalPro.ttf", 40),
                         onClick=lambda: self.disabled())
-        self.click_back = False
+        self.back._hidden = True
+        self.cl_back = False
 
     def change_status_player(self, n):
         n = int(n)
@@ -174,7 +175,7 @@ class Rules_Screen:
             self.player_names[i].hide()
             if i < 2:
                 self.checks[i].hide()
-        self.click_back = True
+        self.cl_back = True
         self.back._hidden = True
 
     def enabled(self):
@@ -186,6 +187,7 @@ class Rules_Screen:
             self.player_names[i].show()
             if i < 2:
                 self.checks[i].show()
+        self.cl_back = False
         self.back._hidden = False
 
     def update(self, events):
@@ -215,8 +217,8 @@ class Rules_Screen:
         self.splav_rules.upgrade()
         pygame_widgets.update(events)
 
-        if self.click_back:
-            self.click_back = False
+        if self.cl_back:
+            self.cl_back = False
             return 1
 
 

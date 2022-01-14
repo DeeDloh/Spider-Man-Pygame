@@ -4,7 +4,6 @@ from pygame_widgets.button import Button
 from pygame_widgets.slider import Slider
 
 from load_image import load_image
-from terminate import terminate
 
 class Cards_Screen:
     def __init__(self, screen):
@@ -21,19 +20,21 @@ class Cards_Screen:
 
         button = Button(screen, 10, 670, 100, 40, inactiveColour=(187, 143, 206), hoverColour=(165, 105, 189),
                         pressedColour=(125, 60, 152), text=' <-', font=pygame.font.Font("./data/UpheavalPro.ttf", 40),
-                        onClick=lambda: self.disabled_button())
+                        onClick=lambda: self.clicked_back())
         button._hidden = True
         self.dis.append(button)
+
+    def clicked_back(self):
+        self.click_back = True
+        print(123)
 
     def disabled_button(self):
         for i in self.dis:
             i._hidden = True
-        self.click_back = True
 
     def enabled_button(self):
         for i in self.dis:
             i._hidden = False
-
 
     def do_cards(self):
         self.cards = []
@@ -43,6 +44,11 @@ class Cards_Screen:
 
     def update(self, events):
         self.enabled_button()
+        if self.click_back:
+            self.click_back = False
+            self.disabled_button()
+            return 1
+
         sl = self.dis[0].getValue()
         for cd in range(len(self.cards)):
             if cd < 71:
@@ -50,9 +56,7 @@ class Cards_Screen:
             else:
                 self.screen.blit(self.cards[cd], (10 + 223 * (cd - 71) - sl, 340))
         pygame_widgets.update(events)
-        if self.click_back:
-            self.click_back = False
-            return 1
+
 
 
 if __name__ == '__main__':
