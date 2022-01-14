@@ -132,21 +132,26 @@ class Rules_Screen:
         self.player_names = []
         self.checks = []
         for i in range(4):
-            if i < 2:
+            '''if i < 2:
                 name_inp = InputText(screen, (490, 121 + 65 * i), value='', width=300,
                                      fontName="./data/UpheavalPro.ttf", fontSize=40, focusColor=(255, 255, 255),
                                      backgroundColor=(255, 255, 255), textColor='black')
-            else:
-                name_inp = InputText(screen, (490, 121 + 65 * i), value=f'Игрок {i + 1}', width=300,
-                                     fontName="./data/UpheavalPro.ttf", fontSize=40, focusColor=(255, 255, 255),
-                                     backgroundColor=(255, 255, 255), textColor='gray')
-                name_inp.disable()
-                check = CustomCheckBox(screen, (797, 108 + 65 * i), on='data/checked.png', off='data/unchecked.png',
-                                       nickname=f'{i}', callBack=lambda n=i: self.change_status_player(n))
-                self.checks.append(check)
-                check.hide()
+            else:'''
+            name_inp = InputText(screen, (490, 121 + 65 * i), value=f'Игрок {i + 1}', width=300,
+                                 fontName="./data/UpheavalPro.ttf", fontSize=40, focusColor=(255, 255, 255),
+                                 backgroundColor=(255, 255, 255), textColor='gray')
+            name_inp.disable()
+            check = CustomCheckBox(screen, (797, 108 + 65 * i), nickname=f'{i}',
+                                   callBack=lambda n=i: self.change_status_player(n),
+                                   on='data/checked.png', off='data/unchecked.png',
+                                   onDisabled='data/checked_disabled.png')
+            self.checks.append(check)
+            check.hide()
             self.player_names.append(name_inp)
             name_inp.hide()
+        for i in range(4):
+            if i < 2:
+                self.checks[i].disable()
 
         self.back = Button(screen, 500, 670, 100, 40, inactiveColour=(187, 143, 206), hoverColour=(165, 105, 189),
                         pressedColour=(125, 60, 152), text=' <-', font=pygame.font.Font("./data/UpheavalPro.ttf", 40),
@@ -155,6 +160,7 @@ class Rules_Screen:
         self.cl_back = False
 
     def change_status_player(self, n):
+        print('change')
         n = int(n)
         if self.checks[n - 2].getValue():
             self.player_names[n].disable()
@@ -167,14 +173,14 @@ class Rules_Screen:
             self.player_names[n].setValue('')
 
     def disabled(self):
+        print('disab')
         for i in self.text:
             i.hide()
         self.game_rules.disabled()
         self.splav_rules.disabled()
         for i in range(4):
             self.player_names[i].hide()
-            if i < 2:
-                self.checks[i].hide()
+            self.checks[i].hide()
         self.cl_back = True
         self.back._hidden = True
 
@@ -185,34 +191,26 @@ class Rules_Screen:
         self.splav_rules.enabled()
         for i in range(4):
             self.player_names[i].show()
-            if i < 2:
-                self.checks[i].show()
+            self.checks[i].show()
         self.cl_back = False
         self.back._hidden = False
 
     def update(self, events):
         self.enabled()
         for event in events:
-            self.checks[0].handleEvent(event)
-            self.checks[1].handleEvent(event)
-            for i in self.player_names:
-                i.handleEvent(event)
+            for i in range(4):
+                self.checks[i].handleEvent(event)
+                self.player_names[i].handleEvent(event)
         for i in range(4):
-            if i < 2:
-                self.screen.fill('white', (435, 106 + 65 * i, 360, 50))
-            else:
-                self.screen.fill('white', (435, 106 + 65 * i, 410, 50))
+            self.screen.fill('white', (435, 106 + 65 * i, 410, 50))
             self.screen.fill(self.color_rect[i], (435, 106 + 65 * i, 50, 50))
-            if i > 1:
-                pygame.draw.rect(self.screen, 'black', (435, 106 + 65 * i, 410, 50), width=3)
+            pygame.draw.rect(self.screen, 'black', (435, 106 + 65 * i, 410, 50), width=3)
             pygame.draw.rect(self.screen, 'black', (435, 106 + 65 * i, 361, 50), width=3)
             pygame.draw.rect(self.screen, 'black', (435, 106 + 65 * i, 50, 50), width=3)
-        for i in self.text:
-            i.draw()
-        for j in range(4):
-            self.player_names[j].draw()
-            if j < 2:
-                self.checks[j].draw()
+        for i in range(4):
+            self.text[i].draw()
+            self.player_names[i].draw()
+            self.checks[i].draw()
         self.game_rules.upgrade()
         self.splav_rules.upgrade()
         pygame_widgets.update(events)
