@@ -4,8 +4,8 @@ from pygame_widgets.button import Button
 
 from terminate import terminate
 from load_image import load_image
-from cards import Cards_screen
-import rules_screen
+from cards import Cards_Screen
+from rules_sc import Rules_Screen
 
 
 class Menu:
@@ -16,8 +16,8 @@ class Menu:
         func = [1, 2, 3, 4]
         font_all = pygame.font.Font("./data/UpheavalPro.ttf", 30)
         self.buttons = []
-        self.cards = Cards_screen(screen)
-
+        self.cards = Cards_Screen(screen)
+        self.rules = Rules_Screen(screen)
         for i in range(4):
             button = Button(screen, 490, 300 + i * 100, 300, 75, text=text_but[i], margin=20, font=font_all,
                             inactiveColour=(220, 20, 60), hoverColour=(65, 105, 225), pressedColour=(75, 0, 130),
@@ -35,7 +35,6 @@ class Menu:
         if n == 4:
             terminate()
         elif n == 3:
-            self.cards.enabled_button()
             while True:
                 events = pygame.event.get()
                 for event in events:
@@ -46,7 +45,15 @@ class Menu:
                     return
                 pygame.display.flip()
         elif n == 1:
-            rules_screen.rules_screen(self.screen)
+            while True:
+                events = pygame.event.get()
+                for event in events:
+                    if event.type == pygame.QUIT:
+                        terminate()
+                self.screen.blit(self.fon, (0, 0))
+                if self.rules.update(events) == 1:
+                    return
+                pygame.display.flip()
 
     def disabled_button(self):
         for i in self.buttons:

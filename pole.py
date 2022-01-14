@@ -12,11 +12,36 @@ from troichka import troichka
 PEREVOD_PR = {'Domination': domination,
               'Троечка': troichka}
 
+class Pole:
+    def __init__(self, screen, players, pravila_igr, pravila_splav='Амереканская версия', WIDTH=1280, HEIGHT=720):
+        self.screen = screen
+        self.fon = pygame.transform.scale(load_image('./data/fon_main.jpg'), (WIDTH, HEIGHT))
+        self.players = players
+
+        self.layout_concepts = [self.creat_layout_concept(i) for i in range(1, 6)]
+
+
+
+    def creat_layout_concept(self, n):
+        buttons = []
+        if n % 2 == 1:
+            for i in range(n):
+                button = Button(self.screen, 577 - (132 * n) + 132 * i, 525, *size_cards)
+                buttons.append(button)
+        else:
+            for i in range(n):
+                button = Button(self.screen, 511 + i * 132 - (132 * (n // 2 - 1)), 525, *size_cards)
+                buttons.append(button)
+        return buttons
+
+
+
+
+
 
 def screen_pole(screen, players, pravila_igr, pravila_splav='Амереканская версия',  WIDTH=1280, HEIGHT=720):
     fon = pygame.transform.scale(load_image('./data/fon_main.jpg'), (WIDTH, HEIGHT))
-    buttons = replace_cards(screen, players[0])
-
+    buttons = set_place_cards(screen, players[0])
     plug_players = []
     card = pygame.transform.scale(load_image('./data/kartinki cards/0.jpg'), size_cards)
     if len(players) == 2:
@@ -42,7 +67,7 @@ def screen_pole(screen, players, pravila_igr, pravila_splav='Амереканс�
         clock.tick(FPS)
 
 
-def replace_cards(screen, player):
+def set_place_cards(screen, player):
     buttons = []
     if len(player.cards_list) % 2 == 1:
         for i in range(len(player.cards_list)):

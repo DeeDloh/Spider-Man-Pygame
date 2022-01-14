@@ -6,7 +6,7 @@ from pygame_widgets.slider import Slider
 from load_image import load_image
 from terminate import terminate
 
-class Cards_screen:
+class Cards_Screen:
     def __init__(self, screen):
         self.screen = screen
         self.do_cards()
