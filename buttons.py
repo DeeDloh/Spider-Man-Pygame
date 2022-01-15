@@ -12,7 +12,7 @@ class SpiderButton(PygWidgetsButton):
     def __init__(self, window, loc, text, width=None, height=40, textColor=(0, 0, 0),
                  upColor=(170, 170, 170), overColor=(210, 210, 210), downColor=(140, 140, 140),
                  fontName=None, fontSize=20, soundOnClick=None,
-                 enterToActivate=False, callBack=None, nickname=None):
+                 enterToActivate=False, callBack=None, nickname=None, borderThickness=None,borderColour=None):
 
         # Create the button's Surface objects.
         if nickname is None:
@@ -68,9 +68,34 @@ class SpiderButton(PygWidgetsButton):
         surfaceDisabled.blit(textSurfaceDisabled, textRect)
 
         # call the PygWidgetsButton superclass to finish initialization
-
+        self.borderThickness = borderThickness
+        self.borderColour = borderColour
+        self.coord_rect = (loc[0], loc[1], width, height)
         super().__init__(window, loc, surfaceUp, surfaceOver, surfaceDown, surfaceDisabled,
                          buttonRect, soundOnClick, nickname, enterToActivate, callBack)
+
+
+    def draw(self):
+        if not self.visible:
+            return
+
+        # Blit the button's current appearance to the surface.
+        if self.isEnabled:
+            if self.borderColour:
+                pygame.draw.rect(self.window, self.borderColour, self.coord_rect, width=self.borderThickness)
+
+            if self.state == PygWidgetsButton.STATE_ARMED:
+                self.window.blit(self.surfaceDown, self.loc)
+
+            elif self.state == PygWidgetsButton.STATE_OVER:
+                self.window.blit(self.surfaceOver, self.loc)
+
+            else:  # IDLE or DISARMED
+                self.window.blit(self.surfaceUp, self.loc)
+
+        else:
+            self.window.blit(self.surfaceDisabled, self.loc)
+
 
 class SpiderButtonImage(PygWidgetsButton):
     def __init__(self, window, loc, up, size, down=None, over=None, disabled=None, soundOnClick=None,
