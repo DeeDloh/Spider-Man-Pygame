@@ -174,6 +174,8 @@ class Rules_Screen:
                            pressedColour=(152, 60, 60), text='играть', font=pygame.font.Font("./data/UpheavalPro.ttf", 30),
                            onClick=lambda: self.start(), borderThickness=3, inactiveBorderColour=(207, 60, 60),
                            hoverBorderColour=(207, 60, 60), pressedBorderColour=(207, 60, 60))
+        self.play._hidden = True
+        self.card_amount_slider._hidden = True
         self.back._hidden = True
         self.cl_back = False
 
@@ -201,6 +203,8 @@ class Rules_Screen:
         for i in range(4):
             self.player_names[i].hide()
             self.checks[i].hide()
+        self.play._hidden = True
+        self.card_amount_slider._hidden = True
         self.cl_back = True
         self.back._hidden = True
 
@@ -212,6 +216,8 @@ class Rules_Screen:
         for i in range(4):
             self.player_names[i].show()
             self.checks[i].show()
+        self.play._hidden = False
+        self.card_amount_slider._hidden = False
         self.cl_back = False
         self.back._hidden = False
 
@@ -236,8 +242,8 @@ class Rules_Screen:
 
         self.screen.fill('white', (613, 495, 54, 50))
         pygame.draw.rect(self.screen, 'black', (613, 495, 54, 50), width=3)
-        self.screen.blit(font.render('1', 1, 'black'), (507, 573))
-        self.screen.blit(font.render('6', 1, 'black'), (756, 573))
+        self.screen.blit(pygame.font.Font("./data/UpheavalPro.ttf", 30).render('1', 1, 'black'), (507, 573))
+        self.screen.blit(pygame.font.Font("./data/UpheavalPro.ttf", 30).render('6', 1, 'black'), (756, 573))
 
         c_a = self.card_amount_slider.getValue()
         if c_a == 1:
