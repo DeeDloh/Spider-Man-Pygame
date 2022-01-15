@@ -81,9 +81,6 @@ class SpiderButton(PygWidgetsButton):
 
         # Blit the button's current appearance to the surface.
         if self.isEnabled:
-            if self.borderColour:
-                pygame.draw.rect(self.window, self.borderColour, self.coord_rect, width=self.borderThickness)
-
             if self.state == PygWidgetsButton.STATE_ARMED:
                 self.window.blit(self.surfaceDown, self.loc)
 
@@ -95,6 +92,9 @@ class SpiderButton(PygWidgetsButton):
 
         else:
             self.window.blit(self.surfaceDisabled, self.loc)
+
+        if self.borderColour:
+            pygame.draw.rect(self.window, self.borderColour, self.coord_rect, width=self.borderThickness)
 
 
 class SpiderButtonImage(PygWidgetsButton):

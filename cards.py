@@ -4,7 +4,7 @@ from pygame_widgets.button import Button
 from pygame_widgets.slider import Slider
 
 from load_image import load_image
-from button import SpiderButton
+from buttons import SpiderButton
 
 class Cards_Screen:
     def __init__(self, screen):
@@ -26,7 +26,7 @@ class Cards_Screen:
         #self.dis.append(button)
         self.button_1 = SpiderButton(screen, (10, 670), '<-', width=100, height=40, upColor=(187, 143, 206),
                                 overColor=(165, 105, 189), downColor=(125, 60, 152),
-                                fontName="./data/UpheavalPro.ttf", fontSize = 40)
+                                fontName="./data/UpheavalPro.ttf", fontSize=40)
         self.button_1.hide()
 
     def clicked_back(self):

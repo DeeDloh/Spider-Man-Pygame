@@ -5,6 +5,7 @@ from pygame_widgets.button import Button
 from pygame_widgets.slider import Slider
 from pygwidgets import DisplayText, InputText, CustomCheckBox
 
+from buttons import SpiderButton
 from load_image import load_image
 from terminate import terminate
 
@@ -166,17 +167,20 @@ class Rules_Screen:
         self.card_amount_slider = Slider(screen, 537, 570, 200, 20, colour=(197, 163, 207), handleColour=(128, 0, 128),
                                          min=1, max=6, initial=1)
 
-        self.back = Button(screen, 505, 646, 125, 60, inactiveColour=(187, 143, 206), hoverColour=(165, 105, 189),
+        '''self.back = Button(screen, 505, 646, 125, 60, inactiveColour=(187, 143, 206), hoverColour=(165, 105, 189),
                         pressedColour=(125, 60, 152), text='назад', font=pygame.font.Font("./data/UpheavalPro.ttf", 30),
                         onClick=lambda: self.disabled(), borderThickness=3, inactiveBorderColour=(163, 60, 207),
-                           hoverBorderColour=(163, 60, 207), pressedBorderColour=(163, 60, 207))
+                           hoverBorderColour=(163, 60, 207), pressedBorderColour=(163, 60, 207))'''
+        self.back = SpiderButton(screen, (505, 646), 'назад', width=125, height=60, upColor=(187, 143, 206),
+                                 overColor=(165, 105, 189), downColor=(125, 60, 152), fontName="./data/UpheavalPro.ttf",
+                                 fontSize=30, borderThickness=3, borderColour=(163, 60, 207))
         self.play = Button(screen, 650, 646, 125, 60, inactiveColour=(206, 143, 143), hoverColour=(189, 105, 105),
                            pressedColour=(152, 60, 60), text='играть', font=pygame.font.Font("./data/UpheavalPro.ttf", 30),
                            onClick=lambda: self.start(), borderThickness=3, inactiveBorderColour=(207, 60, 60),
                            hoverBorderColour=(207, 60, 60), pressedBorderColour=(207, 60, 60))
         self.play._hidden = True
         self.card_amount_slider._hidden = True
-        self.back._hidden = True
+        self.back.hide()
         self.cl_back = False
 
     def change_status_player(self, n):  # а это остается по сути только для вторых двух
@@ -206,7 +210,7 @@ class Rules_Screen:
         self.play._hidden = True
         self.card_amount_slider._hidden = True
         self.cl_back = True
-        self.back._hidden = True
+        self.back.hide()
 
     def enabled(self):
         for i in self.text:
@@ -219,11 +223,13 @@ class Rules_Screen:
         self.play._hidden = False
         self.card_amount_slider._hidden = False
         self.cl_back = False
-        self.back._hidden = False
+        self.back.show()
 
     def update(self, events):
         self.enabled()
         for event in events:
+            if self.back.handleEvent(event):
+                self.disabled()
             for i in range(4):
                 self.checks[i].handleEvent(event)
                 self.player_names[i].handleEvent(event)
@@ -239,6 +245,8 @@ class Rules_Screen:
         for i in range(4):
             self.player_names[i].draw()
             self.checks[i].draw()
+
+        self.back.draw()
 
         self.screen.fill('white', (613, 495, 54, 50))
         pygame.draw.rect(self.screen, 'black', (613, 495, 54, 50), width=3)
