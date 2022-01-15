@@ -4,6 +4,7 @@ from pygame_widgets.button import Button
 from pygame_widgets.slider import Slider
 
 from load_image import load_image
+from button import SpiderButton
 
 class Cards_Screen:
     def __init__(self, screen):
@@ -18,11 +19,15 @@ class Cards_Screen:
         slider._hidden = True
         self.dis.append(slider)
 
-        button = Button(screen, 10, 670, 100, 40, inactiveColour=(187, 143, 206), hoverColour=(165, 105, 189),
-                        pressedColour=(125, 60, 152), text=' <-', font=pygame.font.Font("./data/UpheavalPro.ttf", 40),
-                        onClick=lambda: self.clicked_back())
-        button._hidden = True
-        self.dis.append(button)
+        #button = Button(screen, 10, 670, 100, 40, inactiveColour=(187, 143, 206), hoverColour=(165, 105, 189),
+        #                pressedColour=(125, 60, 152), text=' <-', font=pygame.font.Font("./data/UpheavalPro.ttf", 40),
+        #                onClick=lambda: self.clicked_back())
+        #button._hidden = True
+        #self.dis.append(button)
+        self.button_1 = SpiderButton(screen, (10, 670), '<-', width=100, height=40, upColor=(187, 143, 206),
+                                overColor=(165, 105, 189), downColor=(125, 60, 152),
+                                fontName="./data/UpheavalPro.ttf", fontSize = 40)
+        self.button_1.hide()
 
     def clicked_back(self):
         self.click_back = True
@@ -31,10 +36,12 @@ class Cards_Screen:
     def disabled_button(self):
         for i in self.dis:
             i._hidden = True
+        self.button_1.hide()
 
     def enabled_button(self):
         for i in self.dis:
             i._hidden = False
+        self.button_1.show()
 
     def do_cards(self):
         self.cards = []
@@ -48,13 +55,17 @@ class Cards_Screen:
             self.click_back = False
             self.disabled_button()
             return 1
-
         sl = self.dis[0].getValue()
         for cd in range(len(self.cards)):
             if cd < 71:
                 self.screen.blit(self.cards[cd], (10 + 223 * cd - sl, 10))
             else:
                 self.screen.blit(self.cards[cd], (10 + 223 * (cd - 71) - sl, 340))
+
+        for event in events:
+            if self.button_1.handleEvent(event):
+                self.clicked_back()
+        self.button_1.draw()
         pygame_widgets.update(events)
 
 
