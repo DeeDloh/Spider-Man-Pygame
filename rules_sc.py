@@ -25,10 +25,12 @@ class RuleViewer:
                                          fontName="./data/UpheavalPro.ttf", fontSize=16)
         self.rule_txt_disp.hide()
         self.dis_text.append(self.rule_txt_disp)
+
         back_btn = Button(screen, ins_x + 10, ins_y + self.rule_txt_disp.getRect()[3] + 15, 65, 65, borderThickness=3,
                           onClick=(lambda n=0: self.change_rules(screen, n)))
         back_btn._hidden = True
         self.dis_but.append(back_btn)
+
         self.rule_name_disp = DisplayText(screen, (back_btn.getX() + 70, back_btn.getY()+25), width=235, height=65,
                                           fontName="./data/UpheavalPro.ttf", fontSize=30, justified='center')
         self.rule_name_disp.hide()
@@ -93,8 +95,7 @@ class RuleViewer:
         for i in self.dis_but:
             i._hidden = False
 
-    def upgrade(self):
-        self.enabled()
+    def update(self):
         pygame.draw.rect(self.screen, 'black', self.coords_stroke, 3)
         pygame.draw.rect(self.screen, 'white', self.text_rect)
         self.rule_name_disp.draw()
@@ -226,6 +227,9 @@ class Rules_Screen:
         self.back.show()
 
     def update(self, events):
+        if self.cl_back:
+            self.cl_back = False
+            return 1
         self.enabled()
         for event in events:
             if self.back.handleEvent(event):
@@ -262,13 +266,11 @@ class Rules_Screen:
         self.card_amount_slider.draw()
         self.card_amount_disp.setLoc((618, 500))
 
-        self.game_rules.upgrade()
-        self.splav_rules.upgrade()
+        self.game_rules.update()
+        self.splav_rules.update()
         pygame_widgets.update(events)
 
-        if self.cl_back:
-            self.cl_back = False
-            return 1
+
 
 
 if __name__ == '__main__':
