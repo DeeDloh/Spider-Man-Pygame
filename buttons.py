@@ -1,6 +1,7 @@
 import pygame
 from pygwidgets import TextButton, PygWidgetsButton
 from pygwidgets import PygwidgetsFontManager
+from load_image import load_image
 
 _PYGWIDGETS_FONT_MANAGER = PygwidgetsFontManager()
 
@@ -70,3 +71,31 @@ class SpiderButton(PygWidgetsButton):
 
         super().__init__(window, loc, surfaceUp, surfaceOver, surfaceDown, surfaceDisabled,
                          buttonRect, soundOnClick, nickname, enterToActivate, callBack)
+
+class SpiderButtonImage(PygWidgetsButton):
+    def __init__(self, window, loc, up, size, down=None, over=None, disabled=None, soundOnClick=None,
+                 nickname=None, enterToActivate=False, callBack=None):
+
+        # Create the button's Surface objects.
+        surfaceUp = load_image(up, scale=size)
+
+        if down is None:
+            surfaceDown = surfaceUp
+        else:
+            surfaceDown = load_image(down, scale=size)
+
+        if over is None:
+            surfaceOver = surfaceUp
+        else:
+            surfaceOver = load_image(over, scale=size)
+
+        if disabled is None:
+            surfaceDisabled = surfaceUp
+        else:
+            surfaceDisabled = load_image(disabled, scale=size)
+
+        width, height = surfaceUp.get_size()
+        buttonRect = pygame.Rect(loc[0], loc[1], width, height)
+
+        super().__init__(window, loc, surfaceUp, surfaceOver, surfaceDown, surfaceDisabled,
+                                    buttonRect, soundOnClick, nickname, enterToActivate, callBack)
