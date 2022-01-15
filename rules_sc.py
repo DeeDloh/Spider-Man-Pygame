@@ -2,6 +2,7 @@ import os
 import pygame
 import pygame_widgets
 from pygame_widgets.button import Button
+from pygame_widgets.slider import Slider
 from pygwidgets import DisplayText, InputText, CustomCheckBox
 
 from load_image import load_image
@@ -72,12 +73,12 @@ class RuleViewer:
 
         screen.fill('white', self.text_rect)
 
+        self.rule_name_disp.setLoc(self.r_n_d_loc)
         if '\n' in self.rule_name[self.disp_id]:
             self.rule_name_disp.moveY(-18)
         self.rule_name_disp.setValue(self.rule_name[self.disp_id])
         self.rule_txt_disp.setValue(self.rule_txt[self.disp_id])
-        screen.blit(screen, (0, 0))
-        self.rule_name_disp.setLoc(self.r_n_d_loc)
+        # screen.blit(screen, (0, 0))  нахуя я его тут написал?? я закомментил, ничего не поменялось о_0
 
     def disabled(self):
         for i in self.dis_text:
@@ -111,18 +112,28 @@ class Rules_Screen:
                                              justified='center', textColor=color[i])
             self.text.append(choose_rules_label)
             choose_rules_label.hide()
+            # ------------------------------------------------------------------------------------------------
             choose_players_label = DisplayText(screen, (70 - 1 * i + 420, 22 - 1 * i),
                                                fontName="./data/UpheavalPro.ttf", fontSize=40,
                                                value='Введите\nимена игроков:',
                                                justified='center', textColor=color[i])
             self.text.append(choose_players_label)
             choose_players_label.hide()
-            choose_rules_label = DisplayText(screen, (90 - 1 * i + 865, 22 - 1 * i),
+            # ------------------------------------------------------------------------------------------------
+            choose_splav_label = DisplayText(screen, (90 - 1 * i + 865, 22 - 1 * i),
                                              fontName="./data/UpheavalPro.ttf", fontSize=40,
                                              value='Выберите\nправила\nдля сплава:',
                                              justified='center', textColor=color[i])
-            self.text.append(choose_rules_label)
-            choose_rules_label.hide()
+            self.text.append(choose_splav_label)
+            choose_splav_label.hide()
+            # ------------------------------------------------------------------------------------------------
+            choose_cards_amount_label = DisplayText(screen, (70 - 1 * i + 368, 400 - 1 * i),
+                                                fontName="./data/UpheavalPro.ttf", fontSize=40,
+                                                value='Выберите,\nпо сколько карт\nраздавать игрокам:',
+                                                justified='center', textColor=color[i])
+            self.text.append(choose_cards_amount_label)
+            choose_cards_amount_label.hide()
+
         self.game_rules = RuleViewer(screen, 15, 105, 'pravila')
         self.splav_rules = RuleViewer(screen, 865, 105, 'dla_splav')
         self.game_rules.disabled()
@@ -132,11 +143,6 @@ class Rules_Screen:
         self.player_names = []
         self.checks = []
         for i in range(4):
-            '''if i < 2:
-                name_inp = InputText(screen, (490, 121 + 65 * i), value='', width=300,
-                                     fontName="./data/UpheavalPro.ttf", fontSize=40, focusColor=(255, 255, 255),
-                                     backgroundColor=(255, 255, 255), textColor='black')
-            else:'''
             name_inp = InputText(screen, (490, 121 + 65 * i), value=f'Игрок {i + 1}', width=300,
                                  fontName="./data/UpheavalPro.ttf", fontSize=40, focusColor=(255, 255, 255),
                                  backgroundColor=(255, 255, 255), textColor='gray')
@@ -149,20 +155,31 @@ class Rules_Screen:
             check.hide()
             self.player_names.append(name_inp)
             name_inp.hide()
-        for i in range(4):
-            if i < 2:
-                self.checks[i].disable()
+        for i in range(2):  # здесь жлезобетонно включаются первые два (чек строку 165)
+            self.checks[i].setValue(1)
+            self.checks[i].disable()
+            self.player_names[i].textColor = 'black'
+            self.player_names[i].clearText()
+            self.player_names[i].enable()
 
-        self.back = Button(screen, 500, 670, 100, 40, inactiveColour=(187, 143, 206), hoverColour=(165, 105, 189),
-                        pressedColour=(125, 60, 152), text=' <-', font=pygame.font.Font("./data/UpheavalPro.ttf", 40),
-                        onClick=lambda: self.disabled())
+        self.card_amount_disp = DisplayText(screen, (618, 500), fontName="./data/UpheavalPro.ttf", fontSize=80)
+        self.card_amount_slider = Slider(screen, 537, 570, 200, 20, colour=(197, 163, 207), handleColour=(128, 0, 128),
+                                         min=1, max=6, initial=1)
+
+        self.back = Button(screen, 505, 646, 125, 60, inactiveColour=(187, 143, 206), hoverColour=(165, 105, 189),
+                        pressedColour=(125, 60, 152), text='назад', font=pygame.font.Font("./data/UpheavalPro.ttf", 30),
+                        onClick=lambda: self.disabled(), borderThickness=3, inactiveBorderColour=(163, 60, 207),
+                           hoverBorderColour=(163, 60, 207), pressedBorderColour=(163, 60, 207))
+        self.play = Button(screen, 650, 646, 125, 60, inactiveColour=(206, 143, 143), hoverColour=(189, 105, 105),
+                           pressedColour=(152, 60, 60), text='играть', font=pygame.font.Font("./data/UpheavalPro.ttf", 30),
+                           onClick=lambda: self.start(), borderThickness=3, inactiveBorderColour=(207, 60, 60),
+                           hoverBorderColour=(207, 60, 60), pressedBorderColour=(207, 60, 60))
         self.back._hidden = True
         self.cl_back = False
 
-    def change_status_player(self, n):
-        print('change')
+    def change_status_player(self, n):  # а это остается по сути только для вторых двух
         n = int(n)
-        if self.checks[n - 2].getValue():
+        if self.checks[n].getValue():
             self.player_names[n].disable()
             self.player_names[n].textColor = 'grey'
             self.player_names[n].setValue(f'Игрок {n + 1}')
@@ -171,9 +188,12 @@ class Rules_Screen:
             self.player_names[n].enable()
             self.player_names[n].textColor = 'black'
             self.player_names[n].setValue('')
+            self.player_names[n].giveFocus()
+
+    def start(self):
+        pass
 
     def disabled(self):
-        print('disab')
         for i in self.text:
             i.hide()
         self.game_rules.disabled()
@@ -207,10 +227,27 @@ class Rules_Screen:
             pygame.draw.rect(self.screen, 'black', (435, 106 + 65 * i, 410, 50), width=3)
             pygame.draw.rect(self.screen, 'black', (435, 106 + 65 * i, 361, 50), width=3)
             pygame.draw.rect(self.screen, 'black', (435, 106 + 65 * i, 50, 50), width=3)
+
+        for i in self.text:
+            i.draw()
         for i in range(4):
-            self.text[i].draw()
             self.player_names[i].draw()
             self.checks[i].draw()
+
+        self.screen.fill('white', (613, 495, 54, 50))
+        pygame.draw.rect(self.screen, 'black', (613, 495, 54, 50), width=3)
+        self.screen.blit(font.render('1', 1, 'black'), (507, 573))
+        self.screen.blit(font.render('6', 1, 'black'), (756, 573))
+
+        c_a = self.card_amount_slider.getValue()
+        if c_a == 1:
+            self.card_amount_disp.moveX(14)
+
+        self.card_amount_disp.setValue(self.card_amount_slider.getValue())
+        self.card_amount_disp.draw()
+        self.card_amount_slider.draw()
+        self.card_amount_disp.setLoc((618, 500))
+
         self.game_rules.upgrade()
         self.splav_rules.upgrade()
         pygame_widgets.update(events)
