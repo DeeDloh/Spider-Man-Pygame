@@ -5,7 +5,7 @@ from pygame_widgets.button import Button
 from pygame_widgets.slider import Slider
 from pygwidgets import DisplayText, InputText, CustomCheckBox
 
-from buttons import SpiderButton
+from buttons import SpiderButton, SpiderButtonImage
 from load_image import load_image
 from terminate import terminate
 
@@ -168,20 +168,23 @@ class Rules_Screen:
         self.card_amount_slider = Slider(screen, 537, 570, 200, 20, colour=(197, 163, 207), handleColour=(128, 0, 128),
                                          min=1, max=6, initial=1)
 
-        '''self.back = Button(screen, 505, 646, 125, 60, inactiveColour=(187, 143, 206), hoverColour=(165, 105, 189),
-                        pressedColour=(125, 60, 152), text='назад', font=pygame.font.Font("./data/UpheavalPro.ttf", 30),
-                        onClick=lambda: self.disabled(), borderThickness=3, inactiveBorderColour=(163, 60, 207),
-                           hoverBorderColour=(163, 60, 207), pressedBorderColour=(163, 60, 207))'''
         self.back = SpiderButton(screen, (505, 646), 'назад', width=125, height=60, upColor=(187, 143, 206),
                                  overColor=(165, 105, 189), downColor=(125, 60, 152), fontName="./data/UpheavalPro.ttf",
                                  fontSize=30, borderThickness=3, borderColour=(163, 60, 207))
-        self.play = Button(screen, 650, 646, 125, 60, inactiveColour=(206, 143, 143), hoverColour=(189, 105, 105),
-                           pressedColour=(152, 60, 60), text='играть', font=pygame.font.Font("./data/UpheavalPro.ttf", 30),
-                           onClick=lambda: self.start(), borderThickness=3, inactiveBorderColour=(207, 60, 60),
-                           hoverBorderColour=(207, 60, 60), pressedBorderColour=(207, 60, 60))
-        self.play._hidden = True
+        self.play = SpiderButton(screen, (650, 646), 'играть', width=125, height=60, upColor=(206, 143, 143),
+                                 overColor=(189, 105, 105), downColor=(152, 60, 60), fontName="./data/UpheavalPro.ttf",
+                                 fontSize=30, borderThickness=3, borderColour=(207, 60, 60))
+        self.info = SpiderButtonImage(screen, (1218, 30), 'data/info.png', (49, 49), over='data/info_hover.png')
+        with open('data/history_splav.txt', encoding='utf-8') as hist_splav:
+            hist_splav = hist_splav.readlines()
+        self.info_field = DisplayText(screen, (818, 44), width=380, height=480, fontName="./data/UpheavalPro.ttf",
+                                      fontSize=16, backgroundColor=(197, 163, 207), value=hist_splav)
+
+        self.play.hide()
         self.card_amount_slider._hidden = True
         self.back.hide()
+        self.info.hide()
+        self.info_field.hide()
         self.cl_back = False
 
     def change_status_player(self, n):  # а это остается по сути только для вторых двух
@@ -198,6 +201,7 @@ class Rules_Screen:
             self.player_names[n].giveFocus()
 
     def start(self):
+        print('cum')
         pass
 
     def disabled(self):
@@ -208,10 +212,12 @@ class Rules_Screen:
         for i in range(4):
             self.player_names[i].hide()
             self.checks[i].hide()
-        self.play._hidden = True
+        self.play.hide()
+        self.back.hide()
+        self.info.hide()
+        self.info_field.hide()
         self.card_amount_slider._hidden = True
         self.cl_back = True
-        self.back.hide()
 
     def enabled(self):
         for i in self.text:
@@ -221,10 +227,11 @@ class Rules_Screen:
         for i in range(4):
             self.player_names[i].show()
             self.checks[i].show()
-        self.play._hidden = False
+        self.play.show()
+        self.back.show()
+        self.info.show()
         self.card_amount_slider._hidden = False
         self.cl_back = False
-        self.back.show()
 
     def update(self, events):
         if self.cl_back:
@@ -234,6 +241,8 @@ class Rules_Screen:
         for event in events:
             if self.back.handleEvent(event):
                 self.disabled()
+            if self.play.handleEvent(event):
+                self.start()
             for i in range(4):
                 self.checks[i].handleEvent(event)
                 self.player_names[i].handleEvent(event)
@@ -251,11 +260,13 @@ class Rules_Screen:
             self.checks[i].draw()
 
         self.back.draw()
+        self.play.draw()
+        self.info.draw()
 
         self.screen.fill('white', (613, 495, 54, 50))
         pygame.draw.rect(self.screen, 'black', (613, 495, 54, 50), width=3)
-        self.screen.blit(pygame.font.Font("./data/UpheavalPro.ttf", 30).render('1', 1, 'black'), (507, 573))
-        self.screen.blit(pygame.font.Font("./data/UpheavalPro.ttf", 30).render('6', 1, 'black'), (756, 573))
+        self.screen.blit(pygame.font.Font("./data/UpheavalPro.ttf", 30).render('1', True, 'black'), (507, 573))
+        self.screen.blit(pygame.font.Font("./data/UpheavalPro.ttf", 30).render('6', True, 'black'), (756, 573))
 
         c_a = self.card_amount_slider.getValue()
         if c_a == 1:
@@ -268,6 +279,14 @@ class Rules_Screen:
 
         self.game_rules.update()
         self.splav_rules.update()
+        if pygame.mouse.get_pos()[0] in range(1218, 1267) and pygame.mouse.get_pos()[1] in range(30, 79):
+            self.screen.fill((197, 163, 207), (808, 34, 400, 500))
+            self.info_field.show()
+            self.info_field.draw()
+            pygame.draw.rect(self.screen, 'black', (808, 34, 400, 500), width=3)
+        else:
+            self.info_field.hide()
+            self.info_field.draw()
         pygame_widgets.update(events)
 
 
