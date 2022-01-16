@@ -8,7 +8,7 @@ import pygame
 
 
 def start_screen(all_sprites):
-    FPS = 12
+    FPS = 14
     intro_text = ["Привет игрок!",
                   "Это улучшенная версия игры",
                   "Spider-man PyQt на Pygame",

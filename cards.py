@@ -1,6 +1,5 @@
 import pygame
 import pygame_widgets
-from pygame_widgets.button import Button
 from pygame_widgets.slider import Slider
 
 from load_image import load_image
@@ -19,11 +18,6 @@ class Cards_Screen:
         slider._hidden = True
         self.dis.append(slider)
 
-        #button = Button(screen, 10, 670, 100, 40, inactiveColour=(187, 143, 206), hoverColour=(165, 105, 189),
-        #                pressedColour=(125, 60, 152), text=' <-', font=pygame.font.Font("./data/UpheavalPro.ttf", 40),
-        #                onClick=lambda: self.clicked_back())
-        #button._hidden = True
-        #self.dis.append(button)
         self.button_1 = SpiderButton(screen, (10, 670), '<-', width=100, height=40, upColor=(187, 143, 206),
                                 overColor=(165, 105, 189), downColor=(125, 60, 152),
                                 fontName="./data/UpheavalPro.ttf", fontSize=40)
