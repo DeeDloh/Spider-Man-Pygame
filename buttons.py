@@ -124,3 +124,24 @@ class SpiderButtonImage(PygWidgetsButton):
 
         super().__init__(window, loc, surfaceUp, surfaceOver, surfaceDown, surfaceDisabled,
                                     buttonRect, soundOnClick, nickname, enterToActivate, callBack)
+
+    def change_image(self, up, size, down=None, over=None, disabled=None):
+        self.surfaceUp = load_image(up, scale=size)
+
+        if down is None:
+            self.surfaceDown = self.surfaceUp
+        else:
+            self.surfaceDown = load_image(down, scale=size)
+
+        if over is None:
+            self.surfaceOver = self.surfaceUp
+        else:
+            self.surfaceOver = load_image(over, scale=size)
+
+        if disabled is None:
+            self.surfaceDisabled = self.surfaceUp
+        else:
+            self.surfaceDisabled = load_image(disabled, scale=size)
+
+        width, height = self.surfaceUp.get_size()
+        self.rect = pygame.Rect(self.loc[0], self.loc[1], width, height)
