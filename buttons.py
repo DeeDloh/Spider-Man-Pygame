@@ -12,7 +12,7 @@ class SpiderButton(PygWidgetsButton):
     def __init__(self, window, loc, text, width=None, height=40, textColor=(0, 0, 0),
                  upColor=(170, 170, 170), overColor=(210, 210, 210), downColor=(140, 140, 140),
                  fontName=None, fontSize=20, soundOnClick=None,
-                 enterToActivate=False, callBack=None, nickname=None, borderThickness=None,borderColour=None):
+                 enterToActivate=False, callBack=None, nickname=None, borderThickness=None, borderColour=None):
 
         # Create the button's Surface objects.
         if nickname is None:
@@ -74,7 +74,6 @@ class SpiderButton(PygWidgetsButton):
         super().__init__(window, loc, surfaceUp, surfaceOver, surfaceDown, surfaceDisabled,
                          buttonRect, soundOnClick, nickname, enterToActivate, callBack)
 
-
     def draw(self):
         if not self.visible:
             return
@@ -102,6 +101,7 @@ class SpiderButtonImage(PygWidgetsButton):
                  nickname=None, enterToActivate=False, callBack=None):
 
         # Create the button's Surface objects.
+        self.image = up.split('/')[-1]
         surfaceUp = load_image(up, scale=size)
 
         if down is None:
@@ -123,9 +123,10 @@ class SpiderButtonImage(PygWidgetsButton):
         buttonRect = pygame.Rect(loc[0], loc[1], width, height)
 
         super().__init__(window, loc, surfaceUp, surfaceOver, surfaceDown, surfaceDisabled,
-                                    buttonRect, soundOnClick, nickname, enterToActivate, callBack)
+                         buttonRect, soundOnClick, nickname, enterToActivate, callBack)
 
     def change_image(self, up, size, down=None, over=None, disabled=None):
+        self.image = up.split('/')[-1]
         self.surfaceUp = load_image(up, scale=size)
 
         if down is None:
@@ -143,5 +144,8 @@ class SpiderButtonImage(PygWidgetsButton):
         else:
             self.surfaceDisabled = load_image(disabled, scale=size)
 
-        width, height = self.surfaceUp.get_size()
+        width, height = size
         self.rect = pygame.Rect(self.loc[0], self.loc[1], width, height)
+
+    def name_image(self):
+        return self.image
