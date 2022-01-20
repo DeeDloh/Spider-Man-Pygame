@@ -6,6 +6,7 @@ from terminate import terminate
 from load_image import load_image
 from cards import Cards_Screen
 from rules_sc import Rules_Screen
+from leaderboard import LeadTable
 
 
 class Menu:
@@ -18,6 +19,7 @@ class Menu:
         self.buttons = []
         self.cards = Cards_Screen(screen)
         self.rules = Rules_Screen(screen)
+        self.lb = LeadTable(screen)
         for i in range(4):
             button = Button(screen, 490, 300 + i * 100, 300, 75, text=text_but[i], margin=20, font=font_all,
                             inactiveColour=(220, 20, 60), hoverColour=(65, 105, 225), pressedColour=(75, 0, 130),
@@ -45,7 +47,18 @@ class Menu:
                 if self.cards.update(events) == 1:
                     break
                 pygame.display.flip()
-
+            self.enabled_button()
+        elif n == 2:
+            self.lb.enabled_button()
+            while True:
+                events = pygame.event.get()
+                for event in events:
+                    if event.type == pygame.QUIT:
+                        terminate()
+                self.screen.blit(self.fon, (0, 0))
+                if self.lb.update(events) == 1:
+                    break
+                pygame.display.flip()
             self.enabled_button()
         elif n == 1:
             while True:
