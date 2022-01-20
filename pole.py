@@ -1,4 +1,5 @@
 import pygame
+import random
 
 from buttons import SpiderButtonImage
 from terminate import terminate
@@ -17,7 +18,6 @@ class Pole:
         """players -> list | [(list_id, nickname)]
         pravila_igr -> str
         pravila_splav -> str"""
-        self.k = 0
         self.screen = screen
         self.players = [Player(*i) for i in players]
         self.st_card = pygame.transform.scale(load_image('./data/kartinki cards/0.jpg'), size_cards)
@@ -27,17 +27,18 @@ class Pole:
         self.now_player = self.players[0]
         kol_kart = len(self.now_player.cards_list)
         self.now_button = self.layout_concepts[kol_kart - 1]
-        self.move_plug_but = pygame.USEREVENT + 1
-        pygame.time.set_timer(self.move_plug_but, 1)
         self.prod = False
         self.button_image = False
-        #False - now players chooses card, True - players chose card and stand plug
+        self.flag_change_players = False
+        # False - now players chooses card, True - players chose card and stand plug
         self.image_0 = load_image('./data/kartinki cards/0.jpg',
-                                                scale=self.size_cards)
+                                  scale=self.size_cards)
         self.coords_card_table = [[(577, 310)], [(511, 310), (643, 310)],
                                   [(445, 310), (577, 310), (709, 310)],
                                   [(379, 310), (511, 310), (643, 310), (775, 310)]]
         self.card_table = []
+        self.cords_animeted = [[[577, 525], [577, 5]], [[577, 525], [100, 80], [1054, 80]],
+                               [[577, 525], [12, 265], [577, 5], [1142, 265]]]
         for i in range(kol_kart):
             self.now_button[i].change_image(
                 f'./data/kartinki cards/{self.now_player.cards_list[i]}.jpg', self.size_cards)
@@ -68,6 +69,9 @@ class Pole:
         # заглушки с картами текущего игрока и анимация переворота карт
         # после переворота карт
 
+    def animated_change_players(self):
+        pass
+
     def update(self, events):
         for event in events:
             for i in self.now_button:
@@ -79,16 +83,17 @@ class Pole:
                         self.coords_plug_but = []
                         for i in self.layout_concepts[k - 1]:
                             self.coords_plug_but.append([*i.getLoc(), (577 - i.getLoc()[0])])
+            if event.type == pygame.QUIT:
+                terminate()
 
-
-            if event.type == self.move_plug_but and self.button_image:
-                for cr in range(len(self.coords_plug_but)):
-                    print(self.coords_plug_but[cr][0])
-                    self.screen.blit(self.image_0, (int(self.coords_plug_but[cr][0]),
-                                                                         self.coords_plug_but[cr][1]))
-                    self.coords_plug_but[cr][0] += self.coords_plug_but[cr][2] / 1000
-                if all(round(x[0]) == round(self.coords_plug_but[0][0]) for x in self.coords_plug_but):
-                    self.button_image = False
+        if self.button_image:
+            for cr in range(len(self.coords_plug_but)):
+                self.screen.blit(self.image_0, (int(self.coords_plug_but[cr][0]),
+                                                self.coords_plug_but[cr][1]))
+                self.coords_plug_but[cr][0] += self.coords_plug_but[cr][2] / 100
+            if all(round(x[0]) == round(self.coords_plug_but[0][0]) for x in self.coords_plug_but):
+                self.button_image = False
+                self.flag_change_players = True
 
         for i in self.now_button:
             i.draw()
@@ -97,17 +102,20 @@ class Pole:
             for i in range(len(coord_now)):
                 self.screen.blit(load_image(f'./data/kartinki cards/{self.card_table[i]}.jpg',
                                             scale=self.size_cards), coord_now[i])
-
-        plug_players = []
-        if len(self.players) == 2:
-            plug_players = [(self.st_card, (577, 5))]
-        elif len(self.players) == 3:
-            plug_players = [(self.st_card, (100, 80)), (self.st_card, (1054, 80))]
-        elif len(self.players) == 4:
-            plug_players = [(self.st_card, (12, 265)), (self.st_card, (577, 5)), (self.st_card, (1142, 265))]
-        for cr in plug_players:
-            screen.blit(*cr)
-
+        if not self.flag_change_players:
+            plug_players = []
+            if len(self.players) == 2:
+                plug_players = [(self.st_card, (577, 5))]
+            elif len(self.players) == 3:
+                plug_players = [(self.st_card, (100, 80)), (self.st_card, (1054, 80))]
+            elif len(self.players) == 4:
+                plug_players = [(self.st_card, (12, 265)), (self.st_card, (577, 5)), (self.st_card, (1142, 265))]
+            for cr in plug_players:
+                screen.blit(*cr)
+            self.cords_animeted = [[[577, 310], [577, 5]], [[577, 310], [100, 80], [1054, 80]],
+                                   [[577, 310], [12, 265], [577, 5], [1142, 265]]]
+        else:
+            self.animated_change_players()
 
 
 
@@ -168,7 +176,8 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption('ладно')
     clock = pygame.time.Clock()
-    players = [([45, 53, 47, 53, 53, 53], 'DeeDloh'), ([78, 2, 6], 'ладно'), ([95, 36, 59], '123'), ([34, 39, 29], '456')]
+    players = [([45, 53, 47, 53, 53, 53], 'DeeDloh'), ([78, 2, 6], 'ладно'),
+               ([95, 36, 59], '123'), ([34, 39, 29], '456')]
     pole = Pole(screen, players, 'Domination')
     while True:
         events = pygame.event.get()

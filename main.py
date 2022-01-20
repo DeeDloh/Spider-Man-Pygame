@@ -22,6 +22,7 @@ def start_screen(all_sprites):
     fon = pygame.transform.scale(load_image('./data/start.jpg'), (WIDTH, HEIGHT))
     font = pygame.font.Font("./data/UpheavalPro.ttf", 30)
     chel = AnimatedSprite(load_image("./data/animated_rabbit.png"), 7, 2, 800, -100, all_sprites)
+    chel_2 = AnimatedSprite(load_image("C:/Users/Kirill/Desktop/final.png"), 5, 5, 0, 0, all_sprites)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
