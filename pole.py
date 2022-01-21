@@ -7,6 +7,7 @@ from load_image import load_image
 from player import Player
 from domination import domination
 from troichka import troichka
+from AnimatedSprite import AnimatedSprite
 
 PEREVOD_PR = {'Domination': lambda n, m: domination(n, m),
               'Троечка': lambda n, m: troichka(n, m)}
@@ -31,6 +32,14 @@ class Pole:
         self.button_image = False
         self.flag_change_players = False
         # False - now players chooses card, True - players chose card and stand plug
+
+        self.four_group = pygame.sprite.Group()
+        self.three_group = pygame.sprite.Group()
+        self.two_group = pygame.sprite.Group()
+        self.perehod_2 = AnimatedSprite(load_image("./data/final2.png"), 9, 5, 0, 0, self.two_group)
+        self.perehod_3 = AnimatedSprite(load_image("./data/final3.png"), 11, 3, 0, 0, self.three_group)
+        self.perehod_4 = AnimatedSprite(load_image("./data/final.png"), 5, 5, 0, 0, self.four_group)
+        self.kol_frames = 0
         self.image_0 = load_image('./data/kartinki cards/0.jpg',
                                   scale=self.size_cards)
         self.coords_card_table = [[(577, 310)], [(511, 310), (643, 310)],
@@ -64,13 +73,35 @@ class Pole:
         for i in self.now_button:
             i.hide()
         self.card_table.append(id)
-        self.now_player.del_card(id)
         # сделать функци при вызове, которой делатся
         # заглушки с картами текущего игрока и анимация переворота карт
         # после переворота карт
 
     def animated_change_players(self):
-        pass
+        if len(self.players) == 4:
+            self.four_group.draw(self.screen)
+            self.four_group.update()
+            clock.tick(FPS)
+            self.kol_frames += 1
+            if self.kol_frames == 25:
+                self.kol_frames = 0
+                self.flag_change_players = False
+        elif len(self.players) == 3:
+            self.three_group.draw(self.screen)
+            self.three_group.update()
+            clock.tick(FPS)
+            self.kol_frames += 1
+            if self.kol_frames == 33:
+                self.kol_frames = 0
+                self.flag_change_players = False
+        elif len(self.players) == 2:
+            self.two_group.draw(self.screen)
+            self.two_group.update()
+            clock.tick(FPS)
+            self.kol_frames += 1
+            if self.kol_frames == 45:
+                self.kol_frames = 0
+                self.flag_change_players = False
 
     def update(self, events):
         for event in events:
@@ -78,7 +109,7 @@ class Pole:
                 if i.handleEvent(event):
                     self.change_players(int(i.name_image().split('.')[0]))
                     self.button_image = True
-                    k = len(self.now_player.cards_list)
+                    k = len(self.now_player.cards_list) - 1 if len(self.now_player.cards_list) != 1 else len(self.now_player.cards_list)
                     if k > 0:
                         self.coords_plug_but = []
                         for i in self.layout_concepts[k - 1]:
@@ -97,7 +128,7 @@ class Pole:
 
         for i in self.now_button:
             i.draw()
-        if len(self.card_table) != 0:
+        if len(self.card_table) != 0 and self.card_table != 5:
             coord_now = self.coords_card_table[len(self.card_table) - 1]
             for i in range(len(coord_now)):
                 self.screen.blit(load_image(f'./data/kartinki cards/{self.card_table[i]}.jpg',
@@ -118,66 +149,16 @@ class Pole:
             self.animated_change_players()
 
 
-
-'''
-def screen_pole(screen, players, pravila_igr, pravila_splav='Амереканская версия',  WIDTH=1280, HEIGHT=720):
-    fon = pygame.transform.scale(load_image('./data/fon_main.jpg'), (WIDTH, HEIGHT))
-    buttons = set_place_cards(screen, players[0])
-    plug_players = []
-    card = pygame.transform.scale(load_image('./data/kartinki cards/0.jpg'), size_cards)
-    if len(players) == 2:
-        plug_players.append((card, (577, 5)))
-    elif len(players) == 3:
-        plug_players.extend([(card, (100, 80)), (card, (1054, 80))])
-    elif len(players) == 4:
-        plug_players.extend([(card, (12, 265)), (card, (577, 5)), (card, (1149, 265))])
-    zagl = pygame.transform.scale(load_image('./data/kartinki cards/0.jpg'), size_cards)
-
-    while True:
-        events = pygame.event.get()
-        for event in events:
-            if event.type == pygame.QUIT:
-                terminate()
-        pygame.draw.rect(screen, (0, 128, 0), (0, 0, WIDTH, HEIGHT),)
-
-        for cr in plug_players:
-            screen.blit(*cr)
-        screen.blit(zagl, (577, 310))
-        pygame.draw.ellipse(screen, (0, 0, 0), (150, 200, 980, 320), width=5)
-        pygame_widgets.update(events)
-        pygame.display.flip()
-        clock.tick(FPS)
-
-
-def set_place_cards(screen, player):
-    buttons = []
-    if len(player.cards_list) % 2 == 1:
-        for i in range(len(player.cards_list)):
-            button = Button(screen, 577 - (132 * (len(player.cards_list) // 2)) + 132 * i, 525, *size_cards,
-                            image=pygame.transform.scale(
-                                load_image(f'./data/kartinki cards/{player.cards_list[i]}.jpg'),
-                                size_cards))
-            buttons.append(button)
-    else:
-        for i in range(len(player.cards_list)):
-            button = Button(screen, 511 + i * 132 - (132 * (len(player.cards_list) // 2 - 1)), 525, *size_cards,
-                            image=pygame.transform.scale(
-                                load_image(f'./data/kartinki cards/{player.cards_list[i]}.jpg'),
-                                size_cards))
-            buttons.append(button)
-    return buttons
-'''
-
-
 if __name__ == '__main__':
     pygame.init()
-    FPS = 60
+    FPS = 65
     size = WIDTH, HEIGHT = 1280, 720
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption('ладно')
     clock = pygame.time.Clock()
-    players = [([45, 53, 47, 53, 53, 53], 'DeeDloh'), ([78, 2, 6], 'ладно'),
-               ([95, 36, 59], '123'), ([34, 39, 29], '456')]
+    all_sprites = pygame.sprite.Group()
+    players = [([45], 'DeeDloh'), ([78, 2, 6], 'ладно'),
+               ([95, 36, 59], '123')]
     pole = Pole(screen, players, 'Domination')
     while True:
         events = pygame.event.get()
