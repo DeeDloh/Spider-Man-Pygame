@@ -3,11 +3,11 @@ import cv2
 
 
 pygame.init()
-video = cv2.VideoCapture('C:/Users/Kirill/Desktop/webm.mp4')
+video = cv2.VideoCapture('./data/spider.mp4')
 success, video_image = video.read()
 fps = video.get(cv2.CAP_PROP_FPS)
 
-pygame.mixer.music.load('C:/Users/Kirill/Desktop/webm.ogg')
+pygame.mixer.music.load('./data/spider.ogg')
 pygame.mixer.music.play()
 window = pygame.display.set_mode(video_image.shape[1::-1])
 clock = pygame.time.Clock()
