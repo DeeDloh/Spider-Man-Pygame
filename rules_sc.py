@@ -81,7 +81,6 @@ class RuleViewer:
             self.rule_name_disp.moveY(-18)
         self.rule_name_disp.setValue(self.rule_name[self.disp_id])
         self.rule_txt_disp.setValue(self.rule_txt[self.disp_id])
-        # screen.blit(screen, (0, 0))  нахуя я его тут написал?? я закомментил, ничего не поменялось о_0
 
     def disabled(self):
         for i in self.dis_text:
@@ -157,7 +156,7 @@ class Rules_Screen:
             check.hide()
             self.player_names.append(name_inp)
             name_inp.hide()
-        for i in range(2):  # здесь жлезобетонно включаются первые два (чек строку 165)
+        for i in range(2):
             self.checks[i].setValue(1)
             self.checks[i].disable()
             self.player_names[i].textColor = 'black'
@@ -174,7 +173,8 @@ class Rules_Screen:
         self.play = SpiderButton(screen, (650, 646), 'играть', width=125, height=60, upColor=(206, 143, 143),
                                  overColor=(189, 105, 105), downColor=(152, 60, 60), fontName="./data/UpheavalPro.ttf",
                                  fontSize=30, borderThickness=3, borderColour=(207, 60, 60))
-        self.info = SpiderButtonImage(screen, (1218, 30), 'data/info.png', (49, 49), over='data/info_hover.png')
+        self.info = SpiderButtonImage(screen, (1218, 30), 'data/info.png', (49, 49), over='data/info_hover.png',
+                                      down='data/info_hover.png')
         with open('data/history_splav.txt', encoding='utf-8') as hist_splav:
             hist_splav = hist_splav.readlines()
         self.info_field = DisplayText(screen, (818, 44), width=380, height=480, fontName="./data/UpheavalPro.ttf",
@@ -187,7 +187,7 @@ class Rules_Screen:
         self.info_field.hide()
         self.cl_back = False
 
-    def change_status_player(self, n):  # а это остается по сути только для вторых двух
+    def change_status_player(self, n):
         n = int(n)
         if self.checks[n].getValue():
             self.player_names[n].disable()
@@ -201,7 +201,6 @@ class Rules_Screen:
             self.player_names[n].giveFocus()
 
     def start(self):
-        print('cum')
         pass
 
     def disabled(self):
@@ -239,6 +238,7 @@ class Rules_Screen:
             return 1
         self.enabled()
         for event in events:
+            self.info.handleEvent(event)
             if self.back.handleEvent(event):
                 self.disabled()
             if self.play.handleEvent(event):

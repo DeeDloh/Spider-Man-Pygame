@@ -25,7 +25,6 @@ class Cards_Screen:
 
     def clicked_back(self):
         self.click_back = True
-        print(123)
 
     def disabled_button(self):
         for i in self.dis:

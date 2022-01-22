@@ -90,9 +90,7 @@ class LeadTable:
                 self.clicked_back()
             self.button_inf.handleEvent(event)
             if event.type == pygame.MOUSEBUTTONDOWN and not self.no_slider_flag:
-                if event.button == 1:
-                    print(event.pos)
-                elif event.button == 4:
+                if event.button == 4:
                     if sl <= sl_max - 40:
                         self.slider.setValue(sl + 40)
                     else:
