@@ -49,7 +49,6 @@ class LeadTable:
 
     def clicked_back(self):
         self.click_back = True
-        print(123)
 
     def disabled_button(self):
         self.slider._hidden = True
