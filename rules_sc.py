@@ -1,6 +1,7 @@
 import os
 import pygame
 import pygame_widgets
+import random
 from pygame_widgets.button import Button
 from pygame_widgets.slider import Slider
 from pygwidgets import DisplayText, InputText, CustomCheckBox, PygWidgetsButton
@@ -8,6 +9,7 @@ from pygwidgets import DisplayText, InputText, CustomCheckBox, PygWidgetsButton
 from buttons import SpiderButton, SpiderButtonImage
 from load_image import load_image
 from terminate import terminate
+from pole import Pole
 
 
 class RuleViewer:
@@ -201,7 +203,36 @@ class Rules_Screen:
             self.player_names[n].giveFocus()
 
     def start(self):
-        pass
+        id = list(range(1, 143))
+        random.shuffle(id)
+        names =[]
+        players = []
+        k = self.card_amount_slider.getValue()
+        for i in range(2):
+            if ''.join(self.player_names[i].getValue().split()) == '':
+                names.append(f'Игрок {i + 1}')
+            else:
+                names.append(self.player_names[i].getValue())
+        for i in range(3, 5):
+            if self.checks[i - 2].getValue():
+                if ''.join(self.player_names[i].getValue().split()) == '':
+                    names.append(f'Игрок {i}')
+                else:
+                    names.append(self.player_names[i].getValue())
+        for i in range(len(names)):
+            players.append((id[(i * k):((i + 1) * k)], names[i]))
+
+        pole = Pole(self.screen, players, self.game_rules.rule_name_disp.getValue())
+        pole.enabled()
+        while True:
+            events = pygame.event.get()
+            for event in events:
+                if event.type == pygame.QUIT:
+                    terminate()
+            pygame.draw.rect(self.screen, (0, 128, 0), (0, 0, 1280, 720))
+            if type(pole.update(events)) is list:
+                break
+            pygame.display.flip()
 
     def disabled(self):
         for i in self.text:

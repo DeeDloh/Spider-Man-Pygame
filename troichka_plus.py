@@ -8,19 +8,19 @@ PEREVOD_HAR = {'intellect': 0,
                }
 
 
-def troichka_plus(id_1, id_2, r_har, pr_splav='Амереканская версия', har_spla=()):
+def troichka_plus(id_1, id_2, r_har, pr_splav='Амереканская версия', har_spla=(132, 125, 140, 351, 110)):
     con = sqlite3.connect("Spider-man_cards_stats.sqlite")
     cur = con.cursor()
-    if id_1 == 71:
+    if id_1 == 142:
         if pr_splav == 'Амереканская версия':
-            haract_1 = (1, (132, 125, 140, 351, 110)[PEREVOD_HAR[r_har[0]]], (132, 125, 140, 351, 110)[PEREVOD_HAR[r_har[1]]])
+            haract_1 = (1, har_spla[PEREVOD_HAR[r_har[0]]], har_spla[PEREVOD_HAR[r_har[1]]])
             haract_2 = cur.execute(f"""SELECT danger_stars, {r_har[0]}, {r_har[1]} from cadrs_hero_villain
             WHERE id = {id_2}""").fetchall()[0]
-    elif id_2 == 71:
+    elif id_2 == 142:
         if pr_splav == 'Амереканская версия':
             haract_1 = cur.execute(f"""SELECT danger_stars, {r_har[0]}, {r_har[1]} from cadrs_hero_villain
             WHERE id = {id_1}""").fetchall()[0]
-            haract_2 = (1, (132, 125, 140, 351, 110)[PEREVOD_HAR[r_har[0]]], (132, 125, 140, 351, 110)[PEREVOD_HAR[r_har[1]]])
+            haract_2 = (1, har_spla[PEREVOD_HAR[r_har[0]]], har_spla[PEREVOD_HAR[r_har[1]]])
     else:
         haract_1 = cur.execute(f"""SELECT danger_stars, {r_har[0]}, {r_har[1]} from cadrs_hero_villain
         WHERE id = {id_1}""").fetchall()[0]

@@ -7,7 +7,7 @@ from load_image import load_image
 from cards import Cards_Screen
 from rules_sc import Rules_Screen
 from leaderboard import LeadTable
-
+from pole import Pole
 
 class Menu:
     def __init__(self, screen, WIDTH=1280, HEIGHT=720):
@@ -20,6 +20,7 @@ class Menu:
         self.buttons = []
         self.cards = Cards_Screen(screen)
         self.rules = Rules_Screen(screen)
+        self.pole = Pole(screen)
         self.lb = LeadTable(screen, self.fon_leaderboard)
         for i in range(4):
             button = Button(screen, 490, 300 + i * 100, 300, 75, text=text_but[i], margin=20, font=font_all,

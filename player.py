@@ -5,3 +5,6 @@ class Player:
 
     def del_card(self, id):
         del self.cards_list[self.cards_list.index(id)]
+
+    def add_car(self, id):
+        self.cards_list.append(id)
