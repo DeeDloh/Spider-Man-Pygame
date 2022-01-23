@@ -3,7 +3,7 @@ import pygame
 import pygame_widgets
 from pygame_widgets.button import Button
 from pygame_widgets.slider import Slider
-from pygwidgets import DisplayText, InputText, CustomCheckBox
+from pygwidgets import DisplayText, InputText, CustomCheckBox, PygWidgetsButton
 
 from buttons import SpiderButton, SpiderButtonImage
 from load_image import load_image
@@ -104,7 +104,7 @@ class RuleViewer:
 class Rules_Screen:
     def __init__(self, screen):
         self.screen = screen
-        color = [(0, 0, 0), (75, 0, 130), (128, 0, 128)]
+        color = [(0, 0, 0), (128, 0, 128), (178, 0, 178)]
         self.text = []
         for i in range(3):
             choose_rules_label = DisplayText(screen, (70 - 1 * i, 22 - 1 * i),
@@ -279,7 +279,7 @@ class Rules_Screen:
 
         self.game_rules.update()
         self.splav_rules.update()
-        if pygame.mouse.get_pos()[0] in range(1218, 1267) and pygame.mouse.get_pos()[1] in range(30, 79):
+        if self.info.state == PygWidgetsButton.STATE_OVER:
             self.screen.fill((197, 163, 207), (808, 34, 400, 500))
             self.info_field.show()
             self.info_field.draw()

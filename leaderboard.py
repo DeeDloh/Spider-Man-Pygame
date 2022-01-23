@@ -2,10 +2,13 @@ import pygame
 import pygame_widgets
 import sqlite3
 from pygame_widgets.slider import Slider
+from pygwidgets import PygWidgetsButton
+from random import choice
 
 from load_image import load_image
 from terminate import terminate
-from buttons import SpiderButton
+from buttons import SpiderButton, SpiderButtonImage
+from EEgg import run_eegg
 
 
 class LeadTable:
@@ -41,8 +44,14 @@ class LeadTable:
                                        overColor=(105, 105, 189), downColor=(105, 105, 189),
                                        fontName="./data/UpheavalPro.ttf", fontSize=40, textColor='white')
         self.button_inf.hide()
+
         self.info_field_back = pygame.Surface((330, 100), pygame.SRCALPHA)
         self.info_field_back.fill((202, 93, 249, 152))
+
+        self.hihihiha = SpiderButtonImage(screen, (1000, 630), 'data/eegg.png', (60, 90), over='data/eegg_over.png',
+                                          down='data/eegg_down.png')
+        self.mouse_was_over_eegg = False
+        self.sounds = ['data/hihihiha.mp3', 'data/hihihiha_egor.mp3', 'data/hihihiha_kiril.mp3']
 
         self.click_back = False
         self.scroll(0)
@@ -54,6 +63,7 @@ class LeadTable:
         self.slider._hidden = True
         self.button_1.hide()
         self.button_inf.hide()
+        self.hihihiha.hide()
 
     def enabled_button(self):
         if not self.no_slider_flag:
@@ -87,6 +97,10 @@ class LeadTable:
         for event in events:
             if self.button_1.handleEvent(event):
                 self.clicked_back()
+            if self.hihihiha.handleEvent(event):
+                self.hihihiha.state = PygWidgetsButton.STATE_IDLE
+                self.hihihiha.hide()
+                run_eegg()
             self.button_inf.handleEvent(event)
             if event.type == pygame.MOUSEBUTTONDOWN and not self.no_slider_flag:
                 if event.button == 4:
@@ -107,12 +121,22 @@ class LeadTable:
         self.screen.blit(self.font.render('очки', True, 'white'), (784, 20))
         self.button_1.draw()
         self.button_inf.draw()
-        if pygame.mouse.get_pos()[0] in range(15, 165) and pygame.mouse.get_pos()[1] in range(645, 705):
+        self.screen.blit(pygame.font.Font("./data/UpheavalPro.ttf", 15).render('а всё', True, 'white'), (1010, 700))
+        self.hihihiha.draw()
+        if self.button_inf.state == PygWidgetsButton.STATE_OVER:
             self.info_field_back.blit(self.font.render('победа +30', True, 'white'), (20, 20))
             self.info_field_back.blit(self.font.render('поражение -15', True, 'white'), (20, 60))
             self.screen.blit(self.info_field_back, (15, 530), (0, 0, 330, 500))
         else:
             self.screen.blit(self.fon, (15, 530), (15, 530, 330, 100))
+
+        if self.hihihiha.state == PygWidgetsButton.STATE_OVER:
+            if not self.mouse_was_over_eegg:
+                pygame.mixer.music.load(choice(self.sounds))
+                pygame.mixer.music.play()
+                self.mouse_was_over_eegg = True
+        else:
+            self.mouse_was_over_eegg = False
         pygame_widgets.update(events)
 
 
@@ -130,6 +154,8 @@ if __name__ == '__main__':
         for event in events:
             if event.type == pygame.QUIT:
                 terminate()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                print(event.pos)
 
         screen.blit(fon, (0, 0))
         a.update(events)
