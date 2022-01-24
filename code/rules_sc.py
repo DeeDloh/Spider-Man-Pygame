@@ -227,12 +227,18 @@ class Rules_Screen:
 
         pole = Pole(self.screen, players, self.game_rules.rule_name_disp.getValue())
         pole.enabled()
+        fon = load_image('../data/images/fon_pole.jpg')
+        table = pygame.Surface((980, 320), pygame.SRCALPHA)
+        table.fill((0, 0, 0, 0))
+        pygame.draw.ellipse(table, (0, 0, 0, 160), (0, 0, 980, 320))
         while True:
             events = pygame.event.get()
             for event in events:
                 if event.type == pygame.QUIT:
                     terminate()
-            pygame.draw.rect(self.screen, (0, 128, 0), (0, 0, 1280, 720))
+
+            self.screen.blit(fon, (0, 0))
+            screen.blit(table, (150, 200))
             winner = pole.update(events)
             if type(winner) is list:
                 break
@@ -260,10 +266,9 @@ class Rules_Screen:
                     run = False
                 if buttons[1].handleEvent(event):
                     terminate()
-            pygame.draw.rect(self.screen, (0, 128, 0), (0, 0, 1280, 720))
+            self.screen.blit(fon, (0, 0))
             self.screen.blit(self.st_card, (577, 525))
             self.screen.blit(self.final, (0, 0))
-
 
             text = self.font.render(f'Выиграл: {winner[0].nickname}', True, 'white')
             self.screen.blit(text, (490, 230))
@@ -274,9 +279,10 @@ class Rules_Screen:
         con = sqlite3.connect("../data/databases/leaderboard.db")
         cur = con.cursor()
         if winner != []:
+            print(winner)
             info = cur.execute('SELECT * FROM name_score WHERE name=?', (winner[0].nickname,))
             if info.fetchone() is None:
-                cur.execute(f'INSERT INTO name_score(name, score) VALUES({winner[0].nickname}, 30)')
+                cur.execute(f'INSERT INTO name_score(name, score) VALUES("{winner[0].nickname}", 30)')
                 con.commit()
             else:
                 k = cur.execute('SELECT score FROM name_score WHERE name=?', (winner[0].nickname,)).fetchall()[0][0]
@@ -289,7 +295,7 @@ class Rules_Screen:
                     d = self.player_names[i].getValue()
                     info = cur.execute('SELECT * FROM name_score WHERE name=?', (d,))
                     if info.fetchone() is None:
-                        cur.execute(f'INSERT INTO name_score(name, score) VALUES({d}, 30)')
+                        cur.execute(f'INSERT INTO name_score(name, score) VALUES("{d}", 30)')
                         con.commit()
                     else:
                         k = cur.execute('SELECT score FROM name_score WHERE name=?', (d,)).fetchall()[0][0]
@@ -348,6 +354,13 @@ class Rules_Screen:
             pygame.draw.rect(self.screen, 'black', (435, 106 + 65 * i, 361, 50), width=3)
             pygame.draw.rect(self.screen, 'black', (435, 106 + 65 * i, 50, 50), width=3)
 
+        unique_check = list(filter(None, [i.getValue() for i in self.player_names]))
+        if len(unique_check) != len(set(unique_check)):
+            self.play.hide()
+            self.play.disable()
+        else:
+            self.play.show()
+            self.play.enable()
         for i in self.text:
             i.draw()
         for i in range(4):
@@ -395,7 +408,7 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode(size)
     rl_sc = Rules_Screen(screen)
     fon = pygame.transform.scale(load_image('../data/images/fon_main.jpg'), (WIDTH, HEIGHT))
-    pygame.display.set_caption('хуядно')
+    pygame.display.set_caption('ладно')
     clock = pygame.time.Clock()
     while True:
         events = pygame.event.get()
