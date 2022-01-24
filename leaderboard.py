@@ -13,12 +13,11 @@ from EEgg import run_eegg
 
 class LeadTable:
     def __init__(self, screen, fon):
-        con = sqlite3.connect('data/leaderboard_long.db')
+        con = sqlite3.connect('data/databases/leaderboard_long.db')
         cur = con.cursor()
         db_pull = cur.execute('SELECT * FROM name_score ORDER BY score DESC').fetchall()
         con.close()
         self.name_score = [[i[0] for i in db_pull], [str(i[1]) for i in db_pull]]
-        print(self.name_score)
         if len(self.name_score[0]) == 0:
             self.name_score[0] = ['рекордов', 'пока нет']
             self.name_score[1] = ['', '']
@@ -52,10 +51,10 @@ class LeadTable:
         self.info_field_back = pygame.Surface((330, 100), pygame.SRCALPHA)
         self.info_field_back.fill((202, 93, 249, 152))
 
-        self.hihihiha = SpiderButtonImage(screen, (1000, 630), 'data/eegg.png', (60, 90), over='data/eegg_over.png',
-                                          down='data/eegg_down.png')
+        self.hihihiha = SpiderButtonImage(screen, (1000, 630), 'data/images/eegg.png', (60, 90),
+                                          over='data/images/eegg_over.png', down='data/images/eegg_down.png')
         self.mouse_was_over_eegg = False
-        self.sounds = ['data/hihihiha.mp3', 'data/hihihiha_egor.mp3', 'data/hihihiha_kiril.mp3']
+        self.sounds = ['data/sounds/hihihiha.mp3', 'data/sounds/hihihiha_egor.mp3', 'data/sounds/hihihiha_kiril.mp3']
 
         self.click_back = False
         self.scroll(0)
@@ -149,7 +148,7 @@ if __name__ == '__main__':
     FPS = 60
     size = WIDTH, HEIGHT = 1280, 720
     screen = pygame.display.set_mode(size)
-    fon = pygame.transform.scale(load_image('./data/fon_leaderboard.jpg'), (WIDTH, HEIGHT))
+    fon = pygame.transform.scale(load_image('./data/images/fon_leaderboard.jpg'), (WIDTH, HEIGHT))
     a = LeadTable(screen, fon)
     pygame.display.set_caption('ладно')
     clock = pygame.time.Clock()

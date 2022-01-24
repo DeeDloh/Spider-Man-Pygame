@@ -44,7 +44,7 @@ class Pole:
         self.st_card = pygame.transform.scale(load_image('./data/kartinki cards/0.jpg'), size_cards)
         self.size_cards = size_cards
         self.pravila_igr = pravila_igr
-        con = sqlite3.connect("Spider-man_cards_stats.sqlite")
+        con = sqlite3.connect("data/databases/Spider-man_cards_stats.sqlite")
         self.cur = con.cursor()
         self.haract_disp = DisplayText(screen, (776, 110), fontName="./data/UpheavalPro.ttf",
                                        fontSize=30, backgroundColor=(255, 255, 255),
@@ -60,9 +60,9 @@ class Pole:
         self.four_group = pygame.sprite.Group()
         self.three_group = pygame.sprite.Group()
         self.two_group = pygame.sprite.Group()
-        self.perehod_2 = AnimatedSprite(load_image("./data/final2.png"), 9, 5, 0, 0, self.two_group)
-        self.perehod_3 = AnimatedSprite(load_image("./data/final3.png"), 11, 3, 0, 0, self.three_group)
-        self.perehod_4 = AnimatedSprite(load_image("./data/final.png"), 5, 5, 0, 0, self.four_group)
+        self.perehod_2 = AnimatedSprite(load_image("./data/images/final2.png"), 9, 5, 0, 0, self.two_group)
+        self.perehod_3 = AnimatedSprite(load_image("./data/images/final3.png"), 11, 3, 0, 0, self.three_group)
+        self.perehod_4 = AnimatedSprite(load_image("./data/images/final.png"), 5, 5, 0, 0, self.four_group)
         self.kol_frames = 0
         self.coords_card_table = [[(577, 310)], [(511, 310), (643, 310)],
                                   [(445, 310), (577, 310), (709, 310)],

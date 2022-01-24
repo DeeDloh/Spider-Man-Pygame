@@ -12,7 +12,7 @@ def per_durak(card_beat, card_defend, haracterist, pr_splav='Амереканс�
     haracterist -> int
     1 - intellect, 2 - power, 3 - speed and agility, 4 - special skills, 5 - fighting skills"""
 
-    con = sqlite3.connect("Spider-man_cards_stats.sqlite")
+    con = sqlite3.connect("data/databases/Spider-man_cards_stats.sqlite")
     cur = con.cursor()
     if len(card_beat) == 1:
         if card_beat[0] == 71:

@@ -12,15 +12,15 @@ from pole import Pole
 class Menu:
     def __init__(self, screen, WIDTH=1280, HEIGHT=720):
         self.screen = screen
-        self.fon = pygame.transform.scale(load_image('./data/fon_main.jpg'), (WIDTH, HEIGHT))
-        self.fon_leaderboard = pygame.transform.scale(load_image('./data/fon_leaderboard.jpg'), (WIDTH, HEIGHT))
+        self.fon = pygame.transform.scale(load_image('./data/images/fon_main.jpg'), (WIDTH, HEIGHT))
+        self.fon_leaderboard = pygame.transform.scale(load_image('./data/images/fon_leaderboard.jpg'), (WIDTH, HEIGHT))
         text_but = ['Играть', 'Таблица лидеров', 'Карты', 'Выйти']
         func = [1, 2, 3, 4]
         font_all = pygame.font.Font("./data/UpheavalPro.ttf", 30)
         self.buttons = []
         self.cards = Cards_Screen(screen)
         self.rules = Rules_Screen(screen)
-        self.pole = Pole(screen)
+        #self.pole = Pole(screen)
         self.lb = LeadTable(screen, self.fon_leaderboard)
         for i in range(4):
             button = Button(screen, 490, 300 + i * 100, 300, 75, text=text_but[i], margin=20, font=font_all,
@@ -98,7 +98,7 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption('ладно')
     clock = pygame.time.Clock()
-    fon = pygame.transform.scale(load_image('./data/fon_main.jpg'), (WIDTH, HEIGHT))
+    fon = pygame.transform.scale(load_image('./data/images/fon_main.jpg'), (WIDTH, HEIGHT))
 
     menu = Menu(screen)
     while True:

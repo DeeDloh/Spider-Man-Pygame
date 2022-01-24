@@ -11,7 +11,7 @@ PEREVOD_HAR = {'intellect': 0,
 
 
 def troichka_plus(id_1, id_2, r_har, pr_splav='Амереканская версия', har_spla=()):
-    con = sqlite3.connect("Spider-man_cards_stats.sqlite")
+    con = sqlite3.connect("data/databases/Spider-man_cards_stats.sqlite")
     cur = con.cursor()
     if id_1 == 71:
         if pr_splav == 'Амереканская версия':

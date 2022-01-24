@@ -44,8 +44,8 @@ class RuleViewer:
         forw_btn._hidden = True
         self.dis_but.append(forw_btn)
 
-        back_btn.setImage(load_image('data/back.png', scale=(65, 65)))
-        forw_btn.setImage(load_image('data/forward.png', scale=(65, 65)))
+        back_btn.setImage(load_image('data/images/back.png', scale=(65, 65)))
+        forw_btn.setImage(load_image('data/images/forward.png', scale=(65, 65)))
 
         # подключаем правила, которые будут отображться (для сплава или обычные)
         self.rule_name, self.rule_txt = [], []
@@ -137,7 +137,7 @@ class Rules_Screen:
             self.text.append(choose_cards_amount_label)
             choose_cards_amount_label.hide()
 
-        self.game_rules = RuleViewer(screen, 15, 105, 'pravila')
+        self.game_rules = RuleViewer(screen, 15, 105, 'rules')
         self.splav_rules = RuleViewer(screen, 865, 105, 'dla_splav')
         self.game_rules.disabled()
         self.splav_rules.disabled()
@@ -152,8 +152,8 @@ class Rules_Screen:
             name_inp.disable()
             check = CustomCheckBox(screen, (797, 108 + 65 * i), nickname=f'{i}',
                                    callBack=lambda n=i: self.change_status_player(n),
-                                   on='data/checked.png', off='data/unchecked.png',
-                                   onDisabled='data/checked_disabled.png')
+                                   on='data/images/checked.png', off='data/images/unchecked.png',
+                                   onDisabled='data/images/checked_disabled.png')
             self.checks.append(check)
             check.hide()
             self.player_names.append(name_inp)
@@ -175,8 +175,8 @@ class Rules_Screen:
         self.play = SpiderButton(screen, (650, 646), 'играть', width=125, height=60, upColor=(206, 143, 143),
                                  overColor=(189, 105, 105), downColor=(152, 60, 60), fontName="./data/UpheavalPro.ttf",
                                  fontSize=30, borderThickness=3, borderColour=(207, 60, 60))
-        self.info = SpiderButtonImage(screen, (1218, 30), 'data/info.png', (49, 49), over='data/info_hover.png',
-                                      down='data/info_hover.png')
+        self.info = SpiderButtonImage(screen, (1218, 30), 'data/images/info.png', (49, 49),
+                                      over='data/images/info_hover.png', down='data/images/info_hover.png')
         with open('data/history_splav.txt', encoding='utf-8') as hist_splav:
             hist_splav = hist_splav.readlines()
         self.info_field = DisplayText(screen, (818, 44), width=380, height=580, fontName="./data/UpheavalPro.ttf",
@@ -330,7 +330,7 @@ if __name__ == '__main__':
     size = WIDTH, HEIGHT = 1280, 720
     screen = pygame.display.set_mode(size)
     rl_sc = Rules_Screen(screen)
-    fon = pygame.transform.scale(load_image('./data/fon_main.jpg'), (WIDTH, HEIGHT))
+    fon = pygame.transform.scale(load_image('./data/images/fon_main.jpg'), (WIDTH, HEIGHT))
     pygame.display.set_caption('хуядно')
     clock = pygame.time.Clock()
     while True:

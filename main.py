@@ -20,9 +20,9 @@ def start_screen(all_sprites):
                   "ладно"
                   ]
 
-    fon = pygame.transform.scale(load_image('./data/start.jpg'), (WIDTH, HEIGHT))
+    fon = pygame.transform.scale(load_image('./data/images/start.jpg'), (WIDTH, HEIGHT))
     font = pygame.font.Font("./data/UpheavalPro.ttf", 30)
-    chel = AnimatedSprite(load_image("./data/animated_rabbit.png"), 7, 2, 800, -100, all_sprites)
+    chel = AnimatedSprite(load_image("./data/images/animated_rabbit.png"), 7, 2, 800, -100, all_sprites)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -58,7 +58,7 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption('ладно')
     clock = pygame.time.Clock()
-    fon = pygame.transform.scale(load_image('./data/fon_main.jpg'), (WIDTH, HEIGHT))
+    fon = pygame.transform.scale(load_image('./data/images/fon_main.jpg'), (WIDTH, HEIGHT))
 
     screen.fill((0, 0, 0))
     player = None
