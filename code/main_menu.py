@@ -29,7 +29,7 @@ class Menu:
                             )
             self.buttons.append(button)
 
-        self.color = [(0, 0, 0), (75, 0, 130), (128, 0, 128)]
+        self.color = [(0, 0, 0), (128, 0, 128), (178, 0, 178)]
         self.cords_1 = [(317, 102), (316, 101), (315, 100)]
         self.cords_2 = [(362, 202), (361, 201), (360, 200)]
         self.f1 = pygame.font.Font("../data/UpheavalPro.ttf", 70)

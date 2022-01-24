@@ -13,11 +13,11 @@ from code.EEgg import run_eegg
 
 class LeadTable:
     def __init__(self, screen, fon):
-        con = sqlite3.connect('../data/databases/leaderboard_long.db')
+        con = sqlite3.connect('../data/databases/leaderboard.db')
         cur = con.cursor()
         db_pull = cur.execute('SELECT * FROM name_score ORDER BY score DESC').fetchall()
         con.close()
-        self.name_score = [[i[0] for i in db_pull], [str(i[1]) for i in db_pull]]
+        self.name_score = [[str(i[0]) for i in db_pull], [str(i[1]) for i in db_pull]]
         if len(self.name_score[0]) == 0:
             self.name_score[0] = ['рекордов', 'пока нет']
             self.name_score[1] = ['', '']
