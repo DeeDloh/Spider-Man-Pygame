@@ -13,7 +13,7 @@ def domination(cards, haract, pr_splav='Амереканская версия',
     '''cards -> list| [(id_cards, player_n)]'''
     haract_1 = []
     id = [i[0] for i in cards]
-    con = sqlite3.connect("data/databases/Spider-man_cards_stats.sqlite")
+    con = sqlite3.connect("../data/databases/Spider-man_cards_stats.sqlite")
     cur = con.cursor()
     for i in id:
         if i == 142:

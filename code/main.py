@@ -1,7 +1,7 @@
-from AnimatedSprite import AnimatedSprite
+from classes.AnimatedSprite import AnimatedSprite
 
-from load_image import load_image
-from terminate import terminate
+from code.functions.load_image import load_image
+from code.functions.terminate import terminate
 from main_menu import Menu
 
 
@@ -20,9 +20,9 @@ def start_screen(all_sprites):
                   "ладно"
                   ]
 
-    fon = pygame.transform.scale(load_image('./data/images/start.jpg'), (WIDTH, HEIGHT))
-    font = pygame.font.Font("./data/UpheavalPro.ttf", 30)
-    chel = AnimatedSprite(load_image("./data/images/animated_rabbit.png"), 7, 2, 800, -100, all_sprites)
+    fon = pygame.transform.scale(load_image('../data/images/start.jpg'), (WIDTH, HEIGHT))
+    font = pygame.font.Font("../data/UpheavalPro.ttf", 30)
+    chel = AnimatedSprite(load_image("../data/images/animated_rabbit.png"), 7, 2, 800, -100, all_sprites)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -58,14 +58,13 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption('ладно')
     clock = pygame.time.Clock()
-    fon = pygame.transform.scale(load_image('./data/images/fon_main.jpg'), (WIDTH, HEIGHT))
+    fon = pygame.transform.scale(load_image('../data/images/fon_main.jpg'), (WIDTH, HEIGHT))
 
     screen.fill((0, 0, 0))
     player = None
     all_sprites = pygame.sprite.Group()
     start_screen(all_sprites)
     all_sprites = pygame.sprite.Group()
-
 
     menu = Menu(screen)
     menu.enabled_button()

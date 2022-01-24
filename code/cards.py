@@ -2,8 +2,8 @@ import pygame
 import pygame_widgets
 from pygame_widgets.slider import Slider
 
-from load_image import load_image
-from buttons import SpiderButton
+from code.functions.load_image import load_image
+from classes.buttons import SpiderButton
 
 
 class Cards_Screen:
@@ -19,7 +19,7 @@ class Cards_Screen:
 
         self.button_1 = SpiderButton(screen, (10, 670), '<-', width=100, height=40, upColor=(187, 143, 206),
                                      overColor=(165, 105, 189), downColor=(125, 60, 152),
-                                     fontName="./data/UpheavalPro.ttf", fontSize=40)
+                                     fontName="../data/UpheavalPro.ttf", fontSize=40)
         self.button_1.hide()
 
     def clicked_back(self):
@@ -36,7 +36,7 @@ class Cards_Screen:
     def do_cards(self):
         self.cards = []
         for i in range(1, 143):
-            card = pygame.transform.scale(load_image(f'./data/kartinki cards/{i}.jpg'), (213, 320))
+            card = pygame.transform.scale(load_image(f'../data/kartinki cards/{i}.jpg'), (213, 320))
             self.cards.append(card)
 
     def update(self, events):

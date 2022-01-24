@@ -2,21 +2,21 @@ import pygame
 import pygame_widgets
 from pygame_widgets.button import Button
 
-from terminate import terminate
-from load_image import load_image
+from code.functions.terminate import terminate
+from code.functions.load_image import load_image
 from cards import Cards_Screen
 from rules_sc import Rules_Screen
 from leaderboard import LeadTable
-from pole import Pole
+
 
 class Menu:
     def __init__(self, screen, WIDTH=1280, HEIGHT=720):
         self.screen = screen
-        self.fon = pygame.transform.scale(load_image('./data/images/fon_main.jpg'), (WIDTH, HEIGHT))
-        self.fon_leaderboard = pygame.transform.scale(load_image('./data/images/fon_leaderboard.jpg'), (WIDTH, HEIGHT))
+        self.fon = pygame.transform.scale(load_image('../data/images/fon_main.jpg'), (WIDTH, HEIGHT))
+        self.fon_leaderboard = pygame.transform.scale(load_image('../data/images/fon_leaderboard.jpg'), (WIDTH, HEIGHT))
         text_but = ['Играть', 'Таблица лидеров', 'Карты', 'Выйти']
         func = [1, 2, 3, 4]
-        font_all = pygame.font.Font("./data/UpheavalPro.ttf", 30)
+        font_all = pygame.font.Font("../data/UpheavalPro.ttf", 30)
         self.buttons = []
         self.cards = Cards_Screen(screen)
         self.rules = Rules_Screen(screen)
@@ -32,7 +32,7 @@ class Menu:
         self.color = [(0, 0, 0), (75, 0, 130), (128, 0, 128)]
         self.cords_1 = [(317, 102), (316, 101), (315, 100)]
         self.cords_2 = [(362, 202), (361, 201), (360, 200)]
-        self.f1 = pygame.font.Font("./data/UpheavalPro.ttf", 70)
+        self.f1 = pygame.font.Font("../data/UpheavalPro.ttf", 70)
 
     def clicked_func(self, n):
         self.disabled_button()
@@ -98,7 +98,7 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption('ладно')
     clock = pygame.time.Clock()
-    fon = pygame.transform.scale(load_image('./data/images/fon_main.jpg'), (WIDTH, HEIGHT))
+    fon = pygame.transform.scale(load_image('../data/images/fon_main.jpg'), (WIDTH, HEIGHT))
 
     menu = Menu(screen)
     while True:

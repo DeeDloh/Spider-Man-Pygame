@@ -3,14 +3,13 @@ import random
 import sqlite3
 
 from pygwidgets import DisplayText
-from buttons import SpiderButtonImage
-from terminate import terminate
-from load_image import load_image
+from classes.buttons import SpiderButtonImage
+from code.functions.terminate import terminate
+from code.functions.load_image import load_image
 from player import Player
-from domination import domination
 from troichka import troichka
 from troichka_plus import troichka_plus
-from AnimatedSprite import AnimatedSprite
+from classes.AnimatedSprite import AnimatedSprite
 
 PEREVOD_HAR = {'intellect': 'интеллект',
                'power': 'сила',
@@ -41,13 +40,13 @@ class Pole:
             self.now_haract = list(PEREVOD_HAR.keys())
             random.shuffle(self.now_haract)
             self.now_haract = self.now_haract[:2]
-        self.font = pygame.font.Font("./data/UpheavalPro.ttf", 30)
-        self.st_card = pygame.transform.scale(load_image('./data/kartinki cards/0.jpg'), size_cards)
+        self.font = pygame.font.Font("../data/UpheavalPro.ttf", 30)
+        self.st_card = pygame.transform.scale(load_image('../data/kartinki cards/0.jpg'), size_cards)
         self.size_cards = size_cards
         self.pravila_igr = pravila_igr
-        con = sqlite3.connect("data/databases/Spider-man_cards_stats.sqlite")
+        con = sqlite3.connect("../data/databases/Spider-man_cards_stats.sqlite")
         self.cur = con.cursor()
-        self.haract_disp = DisplayText(screen, (776, 110), fontName="./data/UpheavalPro.ttf",
+        self.haract_disp = DisplayText(screen, (776, 110), fontName="../data/UpheavalPro.ttf",
                                        fontSize=30, backgroundColor=(255, 255, 255),
                                        justified='center', width=195, height=390)
         self.layout_concepts = [self.creat_layout_concept(i) for i in range(1, 7)]
@@ -61,9 +60,9 @@ class Pole:
         self.four_group = pygame.sprite.Group()
         self.three_group = pygame.sprite.Group()
         self.two_group = pygame.sprite.Group()
-        self.perehod_2 = AnimatedSprite(load_image("./data/images/final2.png"), 9, 5, 0, 0, self.two_group)
-        self.perehod_3 = AnimatedSprite(load_image("./data/images/final3.png"), 11, 3, 0, 0, self.three_group)
-        self.perehod_4 = AnimatedSprite(load_image("./data/images/final.png"), 5, 5, 0, 0, self.four_group)
+        self.perehod_2 = AnimatedSprite(load_image("../data/images/final2.png"), 9, 5, 0, 0, self.two_group)
+        self.perehod_3 = AnimatedSprite(load_image("../data/images/final3.png"), 11, 3, 0, 0, self.three_group)
+        self.perehod_4 = AnimatedSprite(load_image("../data/images/final.png"), 5, 5, 0, 0, self.four_group)
         self.kol_frames = 0
         self.coords_card_table = [[(577, 310)], [(511, 310), (643, 310)],
                                   [(445, 310), (577, 310), (709, 310)],
@@ -73,7 +72,7 @@ class Pole:
                                [[577, 525], [12, 265], [577, 5], [1142, 265]]]
         for i in range(kol_kart):
             self.now_button[i].change_image(
-                f'./data/kartinki cards/{self.now_player.cards_list[i]}.jpg', self.size_cards)
+                f'../data/kartinki cards/{self.now_player.cards_list[i]}.jpg', self.size_cards)
         self.FPS = 65
 
     def creat_layout_concept(self, n):
@@ -81,13 +80,13 @@ class Pole:
         if n % 2 == 1:
             for i in range(n):
                 button = SpiderButtonImage(self.screen, (577 - (132 * (n // 2)) + 132 * i, 525),
-                                           './data/kartinki cards/0.jpg', self.size_cards)
+                                           '../data/kartinki cards/0.jpg', self.size_cards)
                 button.hide()
                 buttons.append(button)
         else:
             for i in range(n):
                 button = SpiderButtonImage(self.screen, (511 + i * 132 - (132 * (n // 2 - 1)), 525),
-                                           './data/kartinki cards/0.jpg', self.size_cards)
+                                           '../data/kartinki cards/0.jpg', self.size_cards)
                 button.hide()
                 buttons.append(button)
         return buttons
@@ -143,7 +142,7 @@ class Pole:
         self.now_button = self.layout_concepts[kol_kart - 1]
         for i in range(kol_kart):
             self.now_button[i].change_image(
-                f'./data/kartinki cards/{self.now_player.cards_list[i]}.jpg', self.size_cards)
+                f'../data/kartinki cards/{self.now_player.cards_list[i]}.jpg', self.size_cards)
             self.now_button[i].show()
 
     def opr_winnner_troichka(self):
@@ -217,7 +216,7 @@ class Pole:
         if len(self.card_table) != 0 and self.card_table != 5:
             coord_now = self.coords_card_table[len(self.card_table) - 1]
             for i in range(len(coord_now)):
-                self.screen.blit(load_image(f'./data/kartinki cards/{self.card_table[i]}.jpg',
+                self.screen.blit(load_image(f'../data/kartinki cards/{self.card_table[i]}.jpg',
                                             scale=self.size_cards), coord_now[i])
 
             if self.pravila_igr == 'Троечка' and len(self.card_table) == 2:
@@ -281,7 +280,7 @@ class Pole:
                             vivod_3 = f'\nбойцовские\n\nнавыки:\n{self.haract_splav[4]}'
                         vivod = vivod_1 + vivod_2 + vivod_3
                         self.haract_disp.setValue(vivod)
-                        card = load_image(f'./data/kartinki cards/{i.name_image()}', scale=(266, 400))
+                        card = load_image(f'../data/kartinki cards/{i.name_image()}', scale=(266, 400))
                         self.screen.blit(card, (507, 100))
                         pygame.draw.rect(self.screen, (255, 255, 255), (773, 100, 200, 400), width=0)
                         self.haract_disp.draw()

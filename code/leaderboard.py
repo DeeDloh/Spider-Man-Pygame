@@ -5,15 +5,15 @@ from pygame_widgets.slider import Slider
 from pygwidgets import PygWidgetsButton
 from random import choice
 
-from load_image import load_image
-from terminate import terminate
-from buttons import SpiderButton, SpiderButtonImage
-from EEgg import run_eegg
+from code.functions.load_image import load_image
+from code.functions.terminate import terminate
+from classes.buttons import SpiderButton, SpiderButtonImage
+from code.EEgg import run_eegg
 
 
 class LeadTable:
     def __init__(self, screen, fon):
-        con = sqlite3.connect('data/databases/leaderboard_long.db')
+        con = sqlite3.connect('../data/databases/leaderboard_long.db')
         cur = con.cursor()
         db_pull = cur.execute('SELECT * FROM name_score ORDER BY score DESC').fetchall()
         con.close()
@@ -23,7 +23,7 @@ class LeadTable:
             self.name_score[1] = ['', '']
         self.lb_len = len(self.name_score[0])
 
-        self.font = pygame.font.Font("./data/UpheavalPro.ttf", 40)
+        self.font = pygame.font.Font("../data/UpheavalPro.ttf", 40)
         self.fon = fon
         self.screen = screen
 
@@ -40,21 +40,22 @@ class LeadTable:
 
         self.button_1 = SpiderButton(screen, (15, 15), '<-', width=150, height=60, upColor=(187, 143, 206),
                                      overColor=(165, 105, 189), downColor=(125, 60, 152),
-                                     fontName="./data/UpheavalPro.ttf", fontSize=40, textColor='white')
+                                     fontName="../data/UpheavalPro.ttf", fontSize=40, textColor='white')
         self.button_1.hide()
 
         self.button_inf = SpiderButton(screen, (15, 645), 'info', width=150, height=60, upColor=(143, 144, 206),
                                        overColor=(105, 105, 189), downColor=(105, 105, 189),
-                                       fontName="./data/UpheavalPro.ttf", fontSize=40, textColor='white')
+                                       fontName="../data/UpheavalPro.ttf", fontSize=40, textColor='white')
         self.button_inf.hide()
 
         self.info_field_back = pygame.Surface((330, 100), pygame.SRCALPHA)
         self.info_field_back.fill((202, 93, 249, 152))
 
-        self.hihihiha = SpiderButtonImage(screen, (1000, 630), 'data/images/eegg.png', (60, 90),
-                                          over='data/images/eegg_over.png', down='data/images/eegg_down.png')
+        self.hihihiha = SpiderButtonImage(screen, (1000, 630), '../data/images/eegg.png', (60, 90),
+                                          over='../data/images/eegg_over.png', down='../data/images/eegg_down.png')
         self.mouse_was_over_eegg = False
-        self.sounds = ['data/sounds/hihihiha.mp3', 'data/sounds/hihihiha_egor.mp3', 'data/sounds/hihihiha_kiril.mp3']
+        self.sounds = ['../data/sounds/hihihiha.mp3', '../data/sounds/hihihiha_egor.mp3',
+                       '../data/sounds/hihihiha_kiril.mp3']
 
         self.click_back = False
         self.scroll(0)
@@ -124,9 +125,9 @@ class LeadTable:
         self.screen.blit(self.font.render('очки', True, 'white'), (784, 20))
         self.button_1.draw()
         self.button_inf.draw()
-        self.screen.blit(pygame.font.Font("./data/UpheavalPro.ttf", 15).render('а всё', True, 'white'), (1010, 700))
+        self.screen.blit(pygame.font.Font("../data/UpheavalPro.ttf", 15).render('а всё', True, 'white'), (1010, 700))
         self.hihihiha.draw()
-        if self.button_inf.state == PygWidgetsButton.STATE_OVER:
+        if self.button_inf.state == PygWidgetsButton.STATE_OVER or self.button_inf.state == PygWidgetsButton.STATE_ARMED:
             self.info_field_back.blit(self.font.render('победа +30', True, 'white'), (20, 20))
             self.info_field_back.blit(self.font.render('поражение -15', True, 'white'), (20, 60))
             self.screen.blit(self.info_field_back, (15, 530), (0, 0, 330, 500))
@@ -148,7 +149,7 @@ if __name__ == '__main__':
     FPS = 60
     size = WIDTH, HEIGHT = 1280, 720
     screen = pygame.display.set_mode(size)
-    fon = pygame.transform.scale(load_image('./data/images/fon_leaderboard.jpg'), (WIDTH, HEIGHT))
+    fon = pygame.transform.scale(load_image('../data/images/fon_leaderboard.jpg'), (WIDTH, HEIGHT))
     a = LeadTable(screen, fon)
     pygame.display.set_caption('ладно')
     clock = pygame.time.Clock()

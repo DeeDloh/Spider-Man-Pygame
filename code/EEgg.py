@@ -1,15 +1,15 @@
 import pygame
 import cv2
-from terminate import terminate
+from code.functions.terminate import terminate
 
 
 def run_eegg():
     pygame.init()
-    video = cv2.VideoCapture('./data/video/spider.mp4')
+    video = cv2.VideoCapture('../data/video/spider.mp4')
     success, video_image = video.read()
     fps = video.get(cv2.CAP_PROP_FPS)
 
-    pygame.mixer.music.load('data/video/spider.ogg')
+    pygame.mixer.music.load('../data/video/spider.ogg')
     pygame.mixer.music.play()
     window = pygame.display.set_mode(video_image.shape[1::-1])
     clock = pygame.time.Clock()

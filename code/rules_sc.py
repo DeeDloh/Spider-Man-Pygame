@@ -6,15 +6,16 @@ from pygame_widgets.button import Button
 from pygame_widgets.slider import Slider
 from pygwidgets import DisplayText, InputText, CustomCheckBox, PygWidgetsButton
 
-from buttons import SpiderButton, SpiderButtonImage
-from load_image import load_image
-from terminate import terminate
+from classes.buttons import SpiderButton, SpiderButtonImage
+from code.functions.load_image import load_image
+from code.functions.terminate import terminate
 from pole import Pole
 
 
 class RuleViewer:
     def __init__(self, screen, x, y, rule_folder):
         self.screen = screen
+        font = "../data/UpheavalPro.ttf"
         bord_x, bord_y = x + 1, y + 1
         ins_x, ins_y = x + 3, y + 3
         w, h = 399, 599
@@ -24,7 +25,7 @@ class RuleViewer:
         self.dis_but = []
         self.text_rect = (ins_x, ins_y, w - 4, h - 4)
         self.rule_txt_disp = DisplayText(screen, (ins_x + 10, ins_y + 10), width=w - 24, height=h - 94,
-                                         fontName="./data/UpheavalPro.ttf", fontSize=16)
+                                         fontName=font, fontSize=16)
         self.rule_txt_disp.hide()
         self.dis_text.append(self.rule_txt_disp)
 
@@ -34,7 +35,7 @@ class RuleViewer:
         self.dis_but.append(back_btn)
 
         self.rule_name_disp = DisplayText(screen, (back_btn.getX() + 70, back_btn.getY()+25), width=235, height=65,
-                                          fontName="./data/UpheavalPro.ttf", fontSize=30, justified='center')
+                                          fontName=font, fontSize=30, justified='center')
         self.rule_name_disp.hide()
         self.dis_text.append(self.rule_name_disp)
 
@@ -44,8 +45,8 @@ class RuleViewer:
         forw_btn._hidden = True
         self.dis_but.append(forw_btn)
 
-        back_btn.setImage(load_image('data/images/back.png', scale=(65, 65)))
-        forw_btn.setImage(load_image('data/images/forward.png', scale=(65, 65)))
+        back_btn.setImage(load_image('../data/images/back.png', scale=(65, 65)))
+        forw_btn.setImage(load_image('../data/images/forward.png', scale=(65, 65)))
 
         # подключаем правила, которые будут отображться (для сплава или обычные)
         self.rule_name, self.rule_txt = [], []
@@ -106,41 +107,39 @@ class RuleViewer:
 class Rules_Screen:
     def __init__(self, screen):
         self.screen = screen
+        font = "../data/UpheavalPro.ttf"
         color = [(0, 0, 0), (128, 0, 128), (178, 0, 178)]
         self.text = []
         self.clock = pygame.time.Clock()
-        self.st_card = pygame.transform.scale(load_image('./data/kartinki cards/0.jpg'), (126, 190))
+        self.st_card = pygame.transform.scale(load_image('../data/kartinki cards/0.jpg'), (126, 190))
         for i in range(3):
             choose_rules_label = DisplayText(screen, (70 - 1 * i, 22 - 1 * i),
-                                             fontName="./data/UpheavalPro.ttf", fontSize=40,
-                                             value='Выберите\nправила игры:',
+                                             fontName=font, fontSize=40, value='Выберите\nправила игры:',
                                              justified='center', textColor=color[i])
             self.text.append(choose_rules_label)
             choose_rules_label.hide()
             # ------------------------------------------------------------------------------------------------
             choose_players_label = DisplayText(screen, (70 - 1 * i + 420, 22 - 1 * i),
-                                               fontName="./data/UpheavalPro.ttf", fontSize=40,
-                                               value='Введите\nимена игроков:',
+                                               fontName=font, fontSize=40, value='Введите\nимена игроков:',
                                                justified='center', textColor=color[i])
             self.text.append(choose_players_label)
             choose_players_label.hide()
             # ------------------------------------------------------------------------------------------------
             choose_splav_label = DisplayText(screen, (90 - 1 * i + 865, 22 - 1 * i),
-                                             fontName="./data/UpheavalPro.ttf", fontSize=40,
-                                             value='Выберите\nправила\nдля сплава:',
+                                             fontName=font, fontSize=40, value='Выберите\nправила\nдля сплава:',
                                              justified='center', textColor=color[i])
             self.text.append(choose_splav_label)
             choose_splav_label.hide()
             # ------------------------------------------------------------------------------------------------
             choose_cards_amount_label = DisplayText(screen, (70 - 1 * i + 368, 400 - 1 * i),
-                                                fontName="./data/UpheavalPro.ttf", fontSize=40,
-                                                value='Выберите,\nпо сколько карт\nраздавать игрокам:',
-                                                justified='center', textColor=color[i])
+                                                    fontName=font, fontSize=40,
+                                                    value='Выберите,\nпо сколько карт\nраздавать игрокам:',
+                                                    justified='center', textColor=color[i])
             self.text.append(choose_cards_amount_label)
             choose_cards_amount_label.hide()
 
-        self.game_rules = RuleViewer(screen, 15, 105, 'rules')
-        self.splav_rules = RuleViewer(screen, 865, 105, 'dla_splav')
+        self.game_rules = RuleViewer(screen, 15, 105, '../rules')
+        self.splav_rules = RuleViewer(screen, 865, 105, '../splav_rules')
         self.game_rules.disabled()
         self.splav_rules.disabled()
         self.color_rect = ['red', 'yellow', (17, 113, 209), (23, 163, 5)]
@@ -149,13 +148,13 @@ class Rules_Screen:
         self.checks = []
         for i in range(4):
             name_inp = InputText(screen, (490, 121 + 65 * i), value=f'Игрок {i + 1}', width=300,
-                                 fontName="./data/UpheavalPro.ttf", fontSize=40, focusColor=(255, 255, 255),
+                                 fontName=font, fontSize=40, focusColor=(255, 255, 255),
                                  backgroundColor=(255, 255, 255), textColor='gray')
             name_inp.disable()
             check = CustomCheckBox(screen, (797, 108 + 65 * i), nickname=f'{i}',
                                    callBack=lambda n=i: self.change_status_player(n),
-                                   on='data/images/checked.png', off='data/images/unchecked.png',
-                                   onDisabled='data/images/checked_disabled.png')
+                                   on='../data/images/checked.png', off='../data/images/unchecked.png',
+                                   onDisabled='../data/images/checked_disabled.png')
             self.checks.append(check)
             check.hide()
             self.player_names.append(name_inp)
@@ -167,22 +166,22 @@ class Rules_Screen:
             self.player_names[i].clearText()
             self.player_names[i].enable()
 
-        self.card_amount_disp = DisplayText(screen, (618, 500), fontName="./data/UpheavalPro.ttf", fontSize=80)
+        self.card_amount_disp = DisplayText(screen, (618, 500), fontName=font, fontSize=80)
         self.card_amount_slider = Slider(screen, 537, 570, 200, 20, colour=(197, 163, 207), handleColour=(128, 0, 128),
                                          min=1, max=6, initial=1)
 
         self.back = SpiderButton(screen, (505, 646), 'назад', width=125, height=60, upColor=(187, 143, 206),
-                                 overColor=(165, 105, 189), downColor=(125, 60, 152), fontName="./data/UpheavalPro.ttf",
-                                 fontSize=30, borderThickness=3, borderColour=(163, 60, 207))
+                                 overColor=(165, 105, 189), downColor=(125, 60, 152), fontName=font,fontSize=30,
+                                 borderThickness=3, borderColour=(163, 60, 207))
         self.play = SpiderButton(screen, (650, 646), 'играть', width=125, height=60, upColor=(206, 143, 143),
-                                 overColor=(189, 105, 105), downColor=(152, 60, 60), fontName="./data/UpheavalPro.ttf",
-                                 fontSize=30, borderThickness=3, borderColour=(207, 60, 60))
-        self.info = SpiderButtonImage(screen, (1218, 30), 'data/images/info.png', (49, 49),
-                                      over='data/images/info_hover.png', down='data/images/info_hover.png')
-        with open('data/history_splav.txt', encoding='utf-8') as hist_splav:
+                                 overColor=(189, 105, 105), downColor=(152, 60, 60), fontName=font, fontSize=30,
+                                 borderThickness=3, borderColour=(207, 60, 60))
+        self.info = SpiderButtonImage(screen, (1218, 30), '../data/images/info.png', (49, 49),
+                                      over='../data/images/info_hover.png', down='../data/images/info_hover.png')
+        with open('../data/history_splav.txt', encoding='utf-8') as hist_splav:
             hist_splav = hist_splav.readlines()
-        self.info_field = DisplayText(screen, (818, 44), width=380, height=580, fontName="./data/UpheavalPro.ttf",
-                                      fontSize=16, backgroundColor=(197, 163, 207), value=hist_splav)
+        self.info_field = DisplayText(screen, (818, 44), width=380, height=580, fontName=font, fontSize=16,
+                                      backgroundColor=(197, 163, 207), value=hist_splav)
 
         self.play.hide()
         self.card_amount_slider._hidden = True
@@ -241,13 +240,13 @@ class Rules_Screen:
         self.final = pygame.Surface((1280, 720), pygame.SRCALPHA)
         self.final.fill((34, 34, 34, 152))
         buttons = []
-        button = SpiderButton(screen, (490, 255), 'Поиграть ещё', width=300, height=100, upColor=(187, 143, 206),
-                                 overColor=(165, 105, 189), downColor=(125, 60, 152), fontName="./data/UpheavalPro.ttf",
-                                 fontSize=30, borderThickness=3, borderColour=(163, 60, 207))
+        button = SpiderButton(self.screen, (490, 255), 'Поиграть ещё', width=300, height=100, upColor=(187, 143, 206),
+                              overColor=(165, 105, 189), downColor=(125, 60, 152), fontName="../data/UpheavalPro.ttf",
+                              fontSize=30, borderThickness=3, borderColour=(163, 60, 207))
         buttons.append(button)
-        button = SpiderButton(screen, (490, 365), 'выход', width=300, height=100, upColor=(187, 143, 206),
-                                 overColor=(165, 105, 189), downColor=(125, 60, 152), fontName="./data/UpheavalPro.ttf",
-                                 fontSize=30, borderThickness=3, borderColour=(163, 60, 207))
+        button = SpiderButton(self.screen, (490, 365), 'выход', width=300, height=100, upColor=(187, 143, 206),
+                              overColor=(165, 105, 189), downColor=(125, 60, 152), fontName="../data/UpheavalPro.ttf",
+                              fontSize=30, borderThickness=3, borderColour=(163, 60, 207))
         buttons.append(button)
         run = True
         while run:
@@ -329,8 +328,8 @@ class Rules_Screen:
 
         self.screen.fill('white', (613, 495, 54, 50))
         pygame.draw.rect(self.screen, 'black', (613, 495, 54, 50), width=3)
-        self.screen.blit(pygame.font.Font("./data/UpheavalPro.ttf", 30).render('1', True, 'black'), (507, 573))
-        self.screen.blit(pygame.font.Font("./data/UpheavalPro.ttf", 30).render('6', True, 'black'), (756, 573))
+        self.screen.blit(pygame.font.Font("../data/UpheavalPro.ttf", 30).render('1', True, 'black'), (507, 573))
+        self.screen.blit(pygame.font.Font("../data/UpheavalPro.ttf", 30).render('6', True, 'black'), (756, 573))
 
         c_a = self.card_amount_slider.getValue()
         if c_a == 1:
@@ -343,7 +342,7 @@ class Rules_Screen:
 
         self.game_rules.update()
         self.splav_rules.update()
-        if self.info.state == PygWidgetsButton.STATE_OVER:
+        if self.info.state == PygWidgetsButton.STATE_OVER or self.info.state == PygWidgetsButton.STATE_ARMED:
             self.screen.fill((197, 163, 207), (808, 34, 400, 590))
             self.info_field.show()
             self.info_field.draw()
@@ -358,12 +357,12 @@ class Rules_Screen:
 
 if __name__ == '__main__':
     pygame.init()
-    font = pygame.font.Font("./data/UpheavalPro.ttf", 30)
+    font = pygame.font.Font("../data/UpheavalPro.ttf", 30)
     FPS = 60
     size = WIDTH, HEIGHT = 1280, 720
     screen = pygame.display.set_mode(size)
     rl_sc = Rules_Screen(screen)
-    fon = pygame.transform.scale(load_image('./data/images/fon_main.jpg'), (WIDTH, HEIGHT))
+    fon = pygame.transform.scale(load_image('../data/images/fon_main.jpg'), (WIDTH, HEIGHT))
     pygame.display.set_caption('хуядно')
     clock = pygame.time.Clock()
     while True:

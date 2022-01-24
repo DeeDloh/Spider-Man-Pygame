@@ -2,7 +2,7 @@ import sqlite3
 
 
 def troichka(id_1, id_2, pr_splav='Амереканская версия', har_spla=()):
-    con = sqlite3.connect("data/databases/Spider-man_cards_stats.sqlite")
+    con = sqlite3.connect("../data/databases/Spider-man_cards_stats.sqlite")
     cur = con.cursor()
     if id_1 == 142:
         if pr_splav == 'Амереканская версия':

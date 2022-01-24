@@ -1,7 +1,7 @@
 import pygame
 from pygwidgets import TextButton, PygWidgetsButton
 from pygwidgets import PygwidgetsFontManager
-from load_image import load_image
+from code.functions.load_image import load_image
 
 _PYGWIDGETS_FONT_MANAGER = PygwidgetsFontManager()
 
