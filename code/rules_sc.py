@@ -1,4 +1,6 @@
 import os
+import sqlite3
+
 import pygame
 import pygame_widgets
 import random
@@ -182,7 +184,7 @@ class Rules_Screen:
             hist_splav = hist_splav.readlines()
         self.info_field = DisplayText(screen, (818, 44), width=380, height=580, fontName=font, fontSize=16,
                                       backgroundColor=(197, 163, 207), value=hist_splav)
-
+        self.font = pygame.font.Font("../data/UpheavalPro.ttf", 30)
         self.play.hide()
         self.card_amount_slider._hidden = True
         self.back.hide()
@@ -261,11 +263,41 @@ class Rules_Screen:
             pygame.draw.rect(self.screen, (0, 128, 0), (0, 0, 1280, 720))
             self.screen.blit(self.st_card, (577, 525))
             self.screen.blit(self.final, (0, 0))
+
+
+            text = self.font.render(f'Выиграл: {winner[0].nickname}', True, 'white')
+            self.screen.blit(text, (490, 230))
             for i in buttons:
                 i.draw()
             pygame.display.flip()
             self.clock.tick(65)
+        con = sqlite3.connect("../data/databases/leaderboard.db")
+        cur = con.cursor()
+        if winner != []:
+            info = cur.execute('SELECT * FROM name_score WHERE name=?', (winner[0].nickname,))
+            if info.fetchone() is None:
+                cur.execute(f'INSERT INTO name_score(name, score) VALUES({winner[0].nickname}, 30)')
+                con.commit()
+            else:
+                k = cur.execute('SELECT score FROM name_score WHERE name=?', (winner[0].nickname,)).fetchall()[0][0]
+                cur.execute(f"UPDATE name_score SET score = {k + 30} WHERE name = '{winner[0].nickname}'")
+                con.commit()
+        for i in range(len(self.player_names)):
+            if self.checks[i].getValue() == 1:
+                name = ''.join(self.player_names[i].getValue().split())
+                if name != 'Игрок1' and name != 'Игрок2' and name != 'Игрок3' and name != 'Игрок4':
+                    d = self.player_names[i].getValue()
+                    info = cur.execute('SELECT * FROM name_score WHERE name=?', (d,))
+                    if info.fetchone() is None:
+                        cur.execute(f'INSERT INTO name_score(name, score) VALUES({d}, 30)')
+                        con.commit()
+                    else:
+                        k = cur.execute('SELECT score FROM name_score WHERE name=?', (d,)).fetchall()[0][0]
+                        cur.execute(f"UPDATE name_score SET score = {k + 30} WHERE name = '{d}'")
+                        con.commit()
 
+
+    # Делаем когда есть человек в бд
     def disabled(self):
         for i in self.text:
             i.hide()
