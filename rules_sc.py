@@ -108,6 +108,8 @@ class Rules_Screen:
         self.screen = screen
         color = [(0, 0, 0), (128, 0, 128), (178, 0, 178)]
         self.text = []
+        self.clock = pygame.time.Clock()
+        self.st_card = pygame.transform.scale(load_image('./data/kartinki cards/0.jpg'), (126, 190))
         for i in range(3):
             choose_rules_label = DisplayText(screen, (70 - 1 * i, 22 - 1 * i),
                                              fontName="./data/UpheavalPro.ttf", fontSize=40,
@@ -214,8 +216,8 @@ class Rules_Screen:
             else:
                 names.append(self.player_names[i].getValue())
         for i in range(3, 5):
-            if self.checks[i - 2].getValue():
-                if ''.join(self.player_names[i].getValue().split()) == '':
+            if self.checks[i - 1].getValue() == 1:
+                if ''.join(self.player_names[i - 1].getValue().split()) == '':
                     names.append(f'Игрок {i}')
                 else:
                     names.append(self.player_names[i].getValue())
@@ -230,9 +232,40 @@ class Rules_Screen:
                 if event.type == pygame.QUIT:
                     terminate()
             pygame.draw.rect(self.screen, (0, 128, 0), (0, 0, 1280, 720))
-            if type(pole.update(events)) is list:
+            winner = pole.update(events)
+            if type(winner) is list:
                 break
             pygame.display.flip()
+            self.clock.tick(65)
+
+        self.final = pygame.Surface((1280, 720), pygame.SRCALPHA)
+        self.final.fill((34, 34, 34, 152))
+        buttons = []
+        button = SpiderButton(screen, (490, 255), 'Поиграть ещё', width=300, height=100, upColor=(187, 143, 206),
+                                 overColor=(165, 105, 189), downColor=(125, 60, 152), fontName="./data/UpheavalPro.ttf",
+                                 fontSize=30, borderThickness=3, borderColour=(163, 60, 207))
+        buttons.append(button)
+        button = SpiderButton(screen, (490, 365), 'выход', width=300, height=100, upColor=(187, 143, 206),
+                                 overColor=(165, 105, 189), downColor=(125, 60, 152), fontName="./data/UpheavalPro.ttf",
+                                 fontSize=30, borderThickness=3, borderColour=(163, 60, 207))
+        buttons.append(button)
+        run = True
+        while run:
+            events = pygame.event.get()
+            for event in events:
+                if event.type == pygame.QUIT:
+                    terminate()
+                if buttons[0].handleEvent(event):
+                    run = False
+                if buttons[1].handleEvent(event):
+                    terminate()
+            pygame.draw.rect(self.screen, (0, 128, 0), (0, 0, 1280, 720))
+            self.screen.blit(self.st_card, (577, 525))
+            self.screen.blit(self.final, (0, 0))
+            for i in buttons:
+                i.draw()
+            pygame.display.flip()
+            self.clock.tick(65)
 
     def disabled(self):
         for i in self.text:

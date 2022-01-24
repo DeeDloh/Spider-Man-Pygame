@@ -27,6 +27,7 @@ class Pole:
         """players -> list | [(list_id, nickname)]
         pravila_igr -> str
         pravila_splav -> str"""
+
         self.screen = screen
         self.players = [Player(*i) for i in players]
         self.player_winner = ''
