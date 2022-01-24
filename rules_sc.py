@@ -179,7 +179,7 @@ class Rules_Screen:
                                       down='data/info_hover.png')
         with open('data/history_splav.txt', encoding='utf-8') as hist_splav:
             hist_splav = hist_splav.readlines()
-        self.info_field = DisplayText(screen, (818, 44), width=380, height=480, fontName="./data/UpheavalPro.ttf",
+        self.info_field = DisplayText(screen, (818, 44), width=380, height=580, fontName="./data/UpheavalPro.ttf",
                                       fontSize=16, backgroundColor=(197, 163, 207), value=hist_splav)
 
         self.play.hide()
@@ -311,10 +311,10 @@ class Rules_Screen:
         self.game_rules.update()
         self.splav_rules.update()
         if self.info.state == PygWidgetsButton.STATE_OVER:
-            self.screen.fill((197, 163, 207), (808, 34, 400, 500))
+            self.screen.fill((197, 163, 207), (808, 34, 400, 590))
             self.info_field.show()
             self.info_field.draw()
-            pygame.draw.rect(self.screen, 'black', (808, 34, 400, 500), width=3)
+            pygame.draw.rect(self.screen, 'black', (808, 34, 400, 590), width=3)
         else:
             self.info_field.hide()
             self.info_field.draw()

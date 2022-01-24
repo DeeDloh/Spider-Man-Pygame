@@ -13,11 +13,15 @@ from EEgg import run_eegg
 
 class LeadTable:
     def __init__(self, screen, fon):
-        con = sqlite3.connect('data/leaderboard.db')
+        con = sqlite3.connect('data/leaderboard_long.db')
         cur = con.cursor()
         db_pull = cur.execute('SELECT * FROM name_score ORDER BY score DESC').fetchall()
         con.close()
         self.name_score = [[i[0] for i in db_pull], [str(i[1]) for i in db_pull]]
+        print(self.name_score)
+        if len(self.name_score[0]) == 0:
+            self.name_score[0] = ['рекордов', 'пока нет']
+            self.name_score[1] = ['', '']
         self.lb_len = len(self.name_score[0])
 
         self.font = pygame.font.Font("./data/UpheavalPro.ttf", 40)
