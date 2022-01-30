@@ -1,7 +1,7 @@
 import pygame
 
 
-def load_image(name, colorkey=None, scale=(0, 0)):
+def load_image(name, colorkey=None, scale=(0, 0)):  # функция для загрузки изображения
     fullname = name
     image = pygame.image.load(fullname)
     if colorkey is not None:

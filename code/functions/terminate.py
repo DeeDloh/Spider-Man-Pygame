@@ -1,6 +1,7 @@
 import sys
 import pygame
 
-def terminate():
-    pygame.quit()
+
+def terminate():   # функция для завершения работы программы. просто чтобы не вспоминать две функции для выхода,
+    pygame.quit()  # а удобно завершить все одной строчкой
     sys.exit()

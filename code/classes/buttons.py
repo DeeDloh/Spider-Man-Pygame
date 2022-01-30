@@ -6,8 +6,8 @@ from code.functions.load_image import load_image
 _PYGWIDGETS_FONT_MANAGER = PygwidgetsFontManager()
 
 
-class SpiderButton(PygWidgetsButton):
-    MINIMUM_WIDTH = 100
+class SpiderButton(PygWidgetsButton):  # класс для работы с кнопкой. объединяет в себе фишки кнопки из pygwidgets
+    MINIMUM_WIDTH = 100                # и фишки кнопки из pygame_widgets
 
     def __init__(self, window, loc, text, width=None, height=40, textColor=(0, 0, 0),
                  upColor=(170, 170, 170), overColor=(210, 210, 210), downColor=(140, 140, 140),

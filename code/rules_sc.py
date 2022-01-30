@@ -14,7 +14,8 @@ from code.functions.terminate import terminate
 from pole import Pole
 
 
-class RuleViewer:
+# файл с экраном подготовки к игре
+class RuleViewer:  # класс карусели с выбором правил (вынесен отдельно, потому что таких карусели две)
     def __init__(self, screen, x, y, rule_folder):
         self.screen = screen
         font = "../data/UpheavalPro.ttf"
@@ -26,22 +27,26 @@ class RuleViewer:
         self.dis_text = []
         self.dis_but = []
         self.text_rect = (ins_x, ins_y, w - 4, h - 4)
+        # поле для вывода текста правил
         self.rule_txt_disp = DisplayText(screen, (ins_x + 10, ins_y + 10), width=w - 24, height=h - 94,
                                          fontName=font, fontSize=16)
         self.rule_txt_disp.hide()
         self.dis_text.append(self.rule_txt_disp)
 
+        # кнопка для переключения на прошлое правило
         back_btn = Button(screen, ins_x + 10, ins_y + self.rule_txt_disp.getRect()[3] + 15, 65, 65, borderThickness=3,
                           onClick=(lambda n=0: self.change_rules(screen, n)))
         back_btn._hidden = True
         self.dis_but.append(back_btn)
 
+        # поле для отображения названия правила
         self.rule_name_disp = DisplayText(screen, (back_btn.getX() + 70, back_btn.getY()+25), width=235, height=65,
                                           fontName=font, fontSize=30, justified='center')
         self.rule_name_disp.hide()
         self.dis_text.append(self.rule_name_disp)
 
         self.r_n_d_loc = self.rule_name_disp.getX(), self.rule_name_disp.getY()
+        # кнопка для переключения на предыдущее правило
         forw_btn = Button(screen, back_btn.getX() + 70 + 240, back_btn.getY(), 65, 65, borderThickness=3,
                           onClick=(lambda n=1: self.change_rules(screen, n)))
         forw_btn._hidden = True
@@ -50,7 +55,8 @@ class RuleViewer:
         back_btn.setImage(load_image('../data/images/back.png', scale=(65, 65)))
         forw_btn.setImage(load_image('../data/images/forward.png', scale=(65, 65)))
 
-        # подключаем правила, которые будут отображться (для сплава или обычные)
+        # загружаем файлы и их названия из той директории, название которой было передано в кач-ве аргумента при
+        # инициализации класса (проще говоря выбираем, будут в этой карусели отобр. правила игры или правила для сплава)
         self.rule_name, self.rule_txt = [], []
         rule_files_names = os.listdir(rule_folder)
         for name in rule_files_names:
@@ -72,7 +78,7 @@ class RuleViewer:
         self.disp_id = -1
         self.change_rules(screen, 1)
 
-    def change_rules(self, screen, direction):  # переключение правил стрелками
+    def change_rules(self, screen, direction):  # переключение правил в карусели
         self.disp_id = self.disp_id + 1 if direction else self.disp_id - 1
         if self.disp_id < 0:
             self.disp_id = self.disp_len
@@ -81,32 +87,32 @@ class RuleViewer:
 
         screen.fill('white', self.text_rect)
 
-        self.rule_name_disp.setLoc(self.r_n_d_loc)
-        if '\n' in self.rule_name[self.disp_id]:
+        self.rule_name_disp.setLoc(self.r_n_d_loc)  # название правила немного сдвигается вниз, если занимает больше
+        if '\n' in self.rule_name[self.disp_id]:    # одной строки
             self.rule_name_disp.moveY(-18)
         self.rule_name_disp.setValue(self.rule_name[self.disp_id])
         self.rule_txt_disp.setValue(self.rule_txt[self.disp_id])
 
-    def disabled(self):
+    def disabled(self):  # скрытие всей карусели
         for i in self.dis_text:
             i.hide()
         for i in self.dis_but:
             i._hidden = True
 
-    def enabled(self):
+    def enabled(self):  # отображение всей карусели
         for i in self.dis_text:
             i.show()
         for i in self.dis_but:
             i._hidden = False
 
-    def update(self):
+    def update(self):  # обновление всей карусели (вызывается в методе обновления всего окна)
         pygame.draw.rect(self.screen, 'black', self.coords_stroke, 3)
         pygame.draw.rect(self.screen, 'white', self.text_rect)
         self.rule_name_disp.draw()
         self.rule_txt_disp.draw()
 
 
-class Rules_Screen:
+class Rules_Screen:  # класс окна подготовки к игре
     def __init__(self, screen):
         self.screen = screen
         font = "../data/UpheavalPro.ttf"
@@ -114,7 +120,8 @@ class Rules_Screen:
         self.text = []
         self.clock = pygame.time.Clock()
         self.st_card = pygame.transform.scale(load_image('../data/kartinki cards/0.jpg'), (126, 190))
-        for i in range(3):
+        for i in range(3):  # создание надписей, предлагающих игроку настроить свою игру (выполняется три раза,
+            # по скольку текст состоит из трёх слоёв)
             choose_rules_label = DisplayText(screen, (70 - 1 * i, 22 - 1 * i),
                                              fontName=font, fontSize=40, value='Выберите\nправила игры:',
                                              justified='center', textColor=color[i])
@@ -140,7 +147,7 @@ class Rules_Screen:
             self.text.append(choose_cards_amount_label)
             choose_cards_amount_label.hide()
 
-        self.game_rules = RuleViewer(screen, 15, 105, '../rules')
+        self.game_rules = RuleViewer(screen, 15, 105, '../rules')  # создание каруселей с правилами
         self.splav_rules = RuleViewer(screen, 865, 105, '../splav_rules')
         self.game_rules.disabled()
         self.splav_rules.disabled()
@@ -148,7 +155,7 @@ class Rules_Screen:
 
         self.player_names = []
         self.checks = []
-        for i in range(4):
+        for i in range(4):  # создание полей для ввода имён игроков
             name_inp = InputText(screen, (490, 121 + 65 * i), value=f'Игрок {i + 1}', width=300,
                                  fontName=font, fontSize=40, focusColor=(255, 255, 255),
                                  backgroundColor=(255, 255, 255), textColor='gray')
@@ -161,17 +168,19 @@ class Rules_Screen:
             check.hide()
             self.player_names.append(name_inp)
             name_inp.hide()
-        for i in range(2):
-            self.checks[i].setValue(1)
+        for i in range(2):              # включение двух полей для ввода имен игроков по умолчанию (не может быть меньше
+            self.checks[i].setValue(1)  # двух игроков)
             self.checks[i].disable()
             self.player_names[i].textColor = 'black'
             self.player_names[i].clearText()
             self.player_names[i].enable()
 
+        # создание интерфейса для выбора количества карт, которое будет раздаваться каждому игроку
         self.card_amount_disp = DisplayText(screen, (618, 500), fontName=font, fontSize=80)
         self.card_amount_slider = Slider(screen, 537, 570, 200, 20, colour=(197, 163, 207), handleColour=(128, 0, 128),
                                          min=1, max=6, initial=1)
 
+        # создание кнопок назад, играть и информация
         self.back = SpiderButton(screen, (505, 646), 'назад', width=125, height=60, upColor=(187, 143, 206),
                                  overColor=(165, 105, 189), downColor=(125, 60, 152), fontName=font,fontSize=30,
                                  borderThickness=3, borderColour=(163, 60, 207))
@@ -192,7 +201,7 @@ class Rules_Screen:
         self.info_field.hide()
         self.cl_back = False
 
-    def change_status_player(self, n):
+    def change_status_player(self, n):  # включение/отключения поля для ввода имени игркока при помощи чекбокса
         n = int(n)
         if self.checks[n].getValue():
             self.player_names[n].disable()
@@ -205,14 +214,14 @@ class Rules_Screen:
             self.player_names[n].setValue('')
             self.player_names[n].giveFocus()
 
-    def start(self):
+    def start(self):  # начало игры с применением выбранных настроек
         id = list(range(1, 143))
         random.shuffle(id)
         names =[]
         players = []
         k = self.card_amount_slider.getValue()
-        for i in range(2):
-            if ''.join(self.player_names[i].getValue().split()) == '':
+        for i in range(2):  # сохранение имен игроков (если поле игкрока включено, но имя оставлено пустым, то он
+            if ''.join(self.player_names[i].getValue().split()) == '':  # сохраняется как "Игрок n")
                 names.append(f'Игрок {i + 1}')
             else:
                 names.append(self.player_names[i].getValue())
@@ -225,6 +234,7 @@ class Rules_Screen:
         for i in range(len(names)):
             players.append((id[(i * k):((i + 1) * k)], names[i]))
 
+        # создание экземпляра класса Pole и старт игры
         pole = Pole(self.screen, players, self.game_rules.rule_name_disp.getValue())
         pole.enabled()
         fon = load_image('../data/images/fon_pole.jpg')
@@ -245,6 +255,7 @@ class Rules_Screen:
             pygame.display.flip()
             self.clock.tick(65)
 
+        # завершение игры (отображение побетиля и кнопок выйти и поиграть ещё)
         self.final = pygame.Surface((1280, 720), pygame.SRCALPHA)
         self.final.fill((34, 34, 34, 152))
         buttons = []
@@ -276,6 +287,7 @@ class Rules_Screen:
                 i.draw()
             pygame.display.flip()
             self.clock.tick(65)
+        # запись/обновление результатов в таблице лидеров
         con = sqlite3.connect("../data/databases/leaderboard.db")
         cur = con.cursor()
         if winner != []:
@@ -302,9 +314,7 @@ class Rules_Screen:
                         cur.execute(f"UPDATE name_score SET score = {k + 30} WHERE name = '{d}'")
                         con.commit()
 
-
-    # Делаем когда есть человек в бд
-    def disabled(self):
+    def disabled(self):  # скрытие всего интерфейса окна подготовки к игре
         for i in self.text:
             i.hide()
         self.game_rules.disabled()
@@ -319,7 +329,7 @@ class Rules_Screen:
         self.card_amount_slider._hidden = True
         self.cl_back = True
 
-    def enabled(self):
+    def enabled(self):  # отображение всего интерфейса окна подготовки к игре
         for i in self.text:
             i.show()
         self.game_rules.enabled()
@@ -333,7 +343,7 @@ class Rules_Screen:
         self.card_amount_slider._hidden = False
         self.cl_back = False
 
-    def update(self, events):
+    def update(self, events):  # обновление окна подготовки к игре (вызывается в цикле событий в файле main_menu.py)
         if self.cl_back:
             self.cl_back = False
             return 1
@@ -354,6 +364,7 @@ class Rules_Screen:
             pygame.draw.rect(self.screen, 'black', (435, 106 + 65 * i, 361, 50), width=3)
             pygame.draw.rect(self.screen, 'black', (435, 106 + 65 * i, 50, 50), width=3)
 
+        # проверка введенных никнеймов на уникальность (нельзя начать игру, если ники игроков в одной игре совпадают)
         unique_check = list(filter(None, [i.getValue() for i in self.player_names]))
         if len(unique_check) != len(set(unique_check)):
             self.play.hide()
@@ -387,6 +398,7 @@ class Rules_Screen:
 
         self.game_rules.update()
         self.splav_rules.update()
+        # отображение истории сплава при навеведении курсора на кнопку информации
         if self.info.state == PygWidgetsButton.STATE_OVER or self.info.state == PygWidgetsButton.STATE_ARMED:
             self.screen.fill((197, 163, 207), (808, 34, 400, 590))
             self.info_field.show()
@@ -396,8 +408,6 @@ class Rules_Screen:
             self.info_field.hide()
             self.info_field.draw()
         pygame_widgets.update(events)
-
-
 
 
 if __name__ == '__main__':

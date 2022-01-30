@@ -1,7 +1,7 @@
 import pygame
 
 
-class AnimatedSprite(pygame.sprite.Sprite):
+class AnimatedSprite(pygame.sprite.Sprite):  # класс для загрузки и отображения анимаций
     def __init__(self, sheet, columns, rows, x, y, all_sprites):
         super().__init__(all_sprites)
         self.frames = []

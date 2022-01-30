@@ -11,9 +11,9 @@ from classes.buttons import SpiderButton, SpiderButtonImage
 from code.EEgg import run_eegg
 
 
-class LeadTable:
+class LeadTable:  # класс таблицы лидеров
     def __init__(self, screen, fon):
-        con = sqlite3.connect('../data/databases/leaderboard.db')
+        con = sqlite3.connect('../data/databases/leaderboard.db')  # получаем данные из БД и формируем из них список
         cur = con.cursor()
         db_pull = cur.execute('SELECT * FROM name_score ORDER BY score DESC').fetchall()
         con.close()
@@ -27,6 +27,8 @@ class LeadTable:
         self.fon = fon
         self.screen = screen
 
+        # создаем слайдер, а также настраиваем его под размер таблицы, или вовсе скрываем, если все рекорды
+        # умещаются на одном экране
         self.slider = Slider(screen, 1224, 40, 20, 640, vertical=True, step=40, handleRadius=20,
                              colour=(142, 68, 173), handleColour=(91, 44, 111))
         self.no_slider_flag = False
@@ -38,6 +40,7 @@ class LeadTable:
         self.slider.setValue(self.slider.max)
         self.slider._hidden = True
 
+        # создаем кнопки и поле с информацией
         self.button_1 = SpiderButton(screen, (15, 15), '<-', width=150, height=60, upColor=(187, 143, 206),
                                      overColor=(165, 105, 189), downColor=(125, 60, 152),
                                      fontName="../data/UpheavalPro.ttf", fontSize=40, textColor='white')
@@ -51,6 +54,7 @@ class LeadTable:
         self.info_field_back = pygame.Surface((330, 100), pygame.SRCALPHA)
         self.info_field_back.fill((202, 93, 249, 152))
 
+        # создаем и подготавливаем все для пасхалки
         self.hihihiha = SpiderButtonImage(screen, (1000, 630), '../data/images/eegg.png', (60, 90),
                                           over='../data/images/eegg_over.png', down='../data/images/eegg_down.png')
         self.mouse_was_over_eegg = False
@@ -60,22 +64,22 @@ class LeadTable:
         self.click_back = False
         self.scroll(0)
 
-    def clicked_back(self):
-        self.click_back = True
+    def clicked_back(self):  # метод, который вызывается при нажатии кнопки назад
+        self.click_back = True  # значение этого флага проверяется в цикле событий
 
-    def disabled_button(self):
+    def disabled_button(self):  # метод для скрытия всего интерфейса лидерборда
         self.slider._hidden = True
         self.button_1.hide()
         self.button_inf.hide()
         self.hihihiha.hide()
 
-    def enabled_button(self):
+    def enabled_button(self):  # метод для отображения всего интерфейса лидерборда
         if not self.no_slider_flag:
             self.slider._hidden = False
         self.button_1.show()
         self.button_inf.show()
 
-    def scroll(self, movement):
+    def scroll(self, movement):  # метод, отвечающий за перерисовку таблицы лидеров при изменении значения слайдера
         x = 400
         for i in range(2):
             y = 90 + (movement - self.slider.max)
@@ -89,8 +93,8 @@ class LeadTable:
                 y += 30
             x = 880
 
-    def update(self, events):
-        self.enabled_button()
+    def update(self, events):  # метод отвечающий за обновление всего что есть на экране и вызывающийся в цикле событий
+        self.enabled_button()  # в файле main_menu.py
         if self.click_back:
             self.click_back = False
             self.disabled_button()
@@ -99,15 +103,15 @@ class LeadTable:
         sl = self.slider.getValue()
         sl_max = self.slider.max
         for event in events:
-            if self.button_1.handleEvent(event):
+            if self.button_1.handleEvent(event):  # нажатие на кнопку назад
                 self.clicked_back()
-            if self.hihihiha.handleEvent(event):
+            if self.hihihiha.handleEvent(event):  # нажатие на пасхалку
                 self.hihihiha.state = PygWidgetsButton.STATE_IDLE
                 self.hihihiha.hide()
                 run_eegg()
             self.button_inf.handleEvent(event)
-            if event.type == pygame.MOUSEBUTTONDOWN and not self.no_slider_flag:
-                if event.button == 4:
+            if event.type == pygame.MOUSEBUTTONDOWN and not self.no_slider_flag:  # скролл лидерборда при помощи
+                if event.button == 4:                                             # колёсика мыши
                     if sl <= sl_max - 40:
                         self.slider.setValue(sl + 40)
                     else:
@@ -127,6 +131,7 @@ class LeadTable:
         self.button_inf.draw()
         self.screen.blit(pygame.font.Font("../data/UpheavalPro.ttf", 15).render('а всё', True, 'white'), (1010, 700))
         self.hihihiha.draw()
+        # отображение информации при наведении курсора на кнопку info
         if self.button_inf.state == PygWidgetsButton.STATE_OVER or self.button_inf.state == PygWidgetsButton.STATE_ARMED:
             self.info_field_back.blit(self.font.render('победа +30', True, 'white'), (20, 20))
             self.info_field_back.blit(self.font.render('поражение -15', True, 'white'), (20, 60))
@@ -134,6 +139,7 @@ class LeadTable:
         else:
             self.screen.blit(self.fon, (15, 530), (15, 530, 330, 100))
 
+        # воспроизведение звука при наведении курсора на пасхалку
         if self.hihihiha.state == PygWidgetsButton.STATE_OVER:
             if not self.mouse_was_over_eegg:
                 pygame.mixer.music.load(choice(self.sounds))
