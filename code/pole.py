@@ -28,12 +28,15 @@ class Pole:
         pravila_splav -> str"""
 
         self.screen = screen
+
+        # Создаем игроков
         self.players = [Player(*i) for i in players]
         self.player_winner = ''
         self.clock = pygame.time.Clock()
         if pravila_splav == 'Амереканская версия':
             self.haract_splav = (132, 125, 140, 351, 110)
 
+        # В зависимоти от правила выбирается характеристики
         if pravila_igr == 'Троечка':
             self.now_haract = ('скорость и ловкость', 'сила')
         if pravila_igr == 'Троечка+':
@@ -41,41 +44,59 @@ class Pole:
             random.shuffle(self.now_haract)
             self.now_haract = self.now_haract[:2]
         self.font = pygame.font.Font("../data/UpheavalPro.ttf", 30)
+
+        # Оборот карточки чтобы не прогружать её каждый раз
         self.st_card = pygame.transform.scale(load_image('../data/kartinki cards/0.jpg'), size_cards)
         self.size_cards = size_cards
         self.pravila_igr = pravila_igr
+
+        # Подключение бд с картами
         con = sqlite3.connect("../data/databases/Spider-man_cards_stats.sqlite")
         self.cur = con.cursor()
+
         self.haract_disp = DisplayText(screen, (776, 110), fontName="../data/UpheavalPro.ttf",
                                        fontSize=30, backgroundColor=(255, 255, 255),
                                        justified='center', width=195, height=390)
+        # Концепции с растоновками карт у игрока(1-6)
         self.layout_concepts = [self.creat_layout_concept(i) for i in range(1, 7)]
+
+        # Текущий игрок
         self.now_player = self.players[0]
         kol_kart = len(self.now_player.cards_list)
         self.now_button = self.layout_concepts[kol_kart - 1]
         self.prod = False
-        self.button_image = True
+        self.button_image = True # True - image не проигрываем анимацию складывания карт
+                                 # False - button проигрываем анимацию складывания карт
         self.flag_change_players = False
         # False - now players chooses card, True - players chose card and stand plug
+
+        # Группы спрайтов для карт
         self.four_group = pygame.sprite.Group()
         self.three_group = pygame.sprite.Group()
         self.two_group = pygame.sprite.Group()
+
+        # Создание анимаций передачи хожа
         self.perehod_2 = AnimatedSprite(load_image("../data/images/final2.png"), 9, 5, 0, 0, self.two_group)
         self.perehod_3 = AnimatedSprite(load_image("../data/images/final3.png"), 11, 3, 0, 0, self.three_group)
         self.perehod_4 = AnimatedSprite(load_image("../data/images/final.png"), 5, 5, 0, 0, self.four_group)
         self.kol_frames = 0
+
+        # Координаты для карт на поле
         self.coords_card_table = [[(577, 310)], [(511, 310), (643, 310)],
                                   [(445, 310), (577, 310), (709, 310)],
                                   [(379, 310), (511, 310), (643, 310), (775, 310)]]
+
+        # Текущий карты на поле
         self.card_table = []
-        self.cords_animeted = [[[577, 525], [577, 5]], [[577, 525], [100, 80], [1054, 80]],
-                               [[577, 525], [12, 265], [577, 5], [1142, 265]]]
+
+        # Меняем картинки заглушек у текущий кнопок на картинки кнопок
         for i in range(kol_kart):
             self.now_button[i].change_image(
                 f'../data/kartinki cards/{self.now_player.cards_list[i]}.jpg', self.size_cards)
         self.FPS = 65
 
     def creat_layout_concept(self, n):
+        # Функция создания концептов для кнопок с картами игрока
         buttons = []
         if n % 2 == 1:
             for i in range(n):
@@ -92,11 +113,13 @@ class Pole:
         return buttons
 
     def player_turn(self, id):
+        # Игрок пошел картой
         for i in self.now_button:
             i.hide()
         self.card_table.append(id)
 
     def animated_change_players(self):
+        # Проигрываем
         if len(self.players) == 4:
             self.four_group.draw(self.screen)
             self.four_group.update()
@@ -235,8 +258,6 @@ class Pole:
                 plug_players = [(self.st_card, (12, 265)), (self.st_card, (577, 5)), (self.st_card, (1142, 265))]
             for cr in plug_players:
                 self.screen.blit(*cr)
-            self.cords_animeted = [[[577, 310], [577, 5]], [[577, 310], [100, 80], [1054, 80]],
-                                   [[577, 310], [12, 265], [577, 5], [1142, 265]]]
             co = self.now_button[-1].getLoc()
             text2 = self.font.render(self.now_player.nickname, True, (255, 255, 255))
             self.screen.blit(text2, (co[0] + 132, co[1] + 5))

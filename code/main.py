@@ -9,6 +9,7 @@ import pygame
 
 
 def start_screen(all_sprites):
+    # Приветственное окно с зайчиком
     FPS = 14
     intro_text = ["Привет игрок!",
                   "Это улучшенная версия игры",
@@ -22,6 +23,7 @@ def start_screen(all_sprites):
 
     fon = pygame.transform.scale(load_image('../data/images/start.jpg'), (WIDTH, HEIGHT))
     font = pygame.font.Font("../data/UpheavalPro.ttf", 30)
+    # Создаем класс с зайчиком
     chel = AnimatedSprite(load_image("../data/images/animated_rabbit.png"), 7, 2, 800, -100, all_sprites)
     while True:
         for event in pygame.event.get():
@@ -35,10 +37,12 @@ def start_screen(all_sprites):
         screen.fill(pygame.Color("black"))
         screen.blit(fon, (0, -1))
         all_sprites.draw(screen)
+        # Меняем кадр зайчика на следидуйщий
         all_sprites.update()
         text1 = font.render('Нажми Enter чтобы продолжить', True, (255, 255, 255))
         screen.blit(text1, (375, 200))
         text_coord = 470
+        # Текст с пояснением что это за программа
         for line in intro_text:
             string_rendered = font.render(line, 1, pygame.Color('white'))
             intro_rect = string_rendered.get_rect()

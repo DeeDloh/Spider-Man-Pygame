@@ -182,7 +182,7 @@ class Rules_Screen:  # класс окна подготовки к игре
 
         # создание кнопок назад, играть и информация
         self.back = SpiderButton(screen, (505, 646), 'назад', width=125, height=60, upColor=(187, 143, 206),
-                                 overColor=(165, 105, 189), downColor=(125, 60, 152), fontName=font,fontSize=30,
+                                 overColor=(165, 105, 189), downColor=(125, 60, 152), fontName=font, fontSize=30,
                                  borderThickness=3, borderColour=(163, 60, 207))
         self.play = SpiderButton(screen, (650, 646), 'играть', width=125, height=60, upColor=(206, 143, 143),
                                  overColor=(189, 105, 105), downColor=(152, 60, 60), fontName=font, fontSize=30,
@@ -217,7 +217,7 @@ class Rules_Screen:  # класс окна подготовки к игре
     def start(self):  # начало игры с применением выбранных настроек
         id = list(range(1, 143))
         random.shuffle(id)
-        names =[]
+        names = []
         players = []
         k = self.card_amount_slider.getValue()
         for i in range(2):  # сохранение имен игроков (если поле игкрока включено, но имя оставлено пустым, то он
@@ -287,32 +287,38 @@ class Rules_Screen:  # класс окна подготовки к игре
                 i.draw()
             pygame.display.flip()
             self.clock.tick(65)
-        # запись/обновление результатов в таблице лидеров
+        # запись/обновление победителя результата в таблице лидеров
         con = sqlite3.connect("../data/databases/leaderboard.db")
         cur = con.cursor()
         if winner != []:
             print(winner)
-            info = cur.execute('SELECT * FROM name_score WHERE name=?', (winner[0].nickname,))
-            if info.fetchone() is None:
-                cur.execute(f'INSERT INTO name_score(name, score) VALUES("{winner[0].nickname}", 30)')
-                con.commit()
-            else:
-                k = cur.execute('SELECT score FROM name_score WHERE name=?', (winner[0].nickname,)).fetchall()[0][0]
-                cur.execute(f"UPDATE name_score SET score = {k + 30} WHERE name = '{winner[0].nickname}'")
-                con.commit()
+            name = ''.join(winner[0].nickname.split())
+            if name != 'Игрок1' and name != 'Игрок2' and name != 'Игрок3' and name != 'Игрок4'\
+                    and name != '':
+                info = cur.execute('SELECT * FROM name_score WHERE name=?', (winner[0].nickname,))
+                if info.fetchone() is None:
+                    cur.execute(f'INSERT INTO name_score(name, score) VALUES("{winner[0].nickname}", 30)')
+                    con.commit()
+                else:
+                    k = cur.execute('SELECT score FROM name_score WHERE name=?', (winner[0].nickname,)).fetchall()[0][0]
+                    cur.execute(f"UPDATE name_score SET score = {k + 30} WHERE name = '{winner[0].nickname}'")
+                    con.commit()
+        # запись/обновление проигравшех результата в таблице лидеров
         for i in range(len(self.player_names)):
             if self.checks[i].getValue() == 1:
                 name = ''.join(self.player_names[i].getValue().split())
-                if name != 'Игрок1' and name != 'Игрок2' and name != 'Игрок3' and name != 'Игрок4':
+                if name != 'Игрок1' and name != 'Игрок2' and name != 'Игрок3' and name != 'Игрок4'\
+                        and name != '' and name != ''.join(winner[0].nickname.split()):
                     d = self.player_names[i].getValue()
                     info = cur.execute('SELECT * FROM name_score WHERE name=?', (d,))
                     if info.fetchone() is None:
-                        cur.execute(f'INSERT INTO name_score(name, score) VALUES("{d}", 30)')
+                        cur.execute(f'INSERT INTO name_score(name, score) VALUES("{d}", 0)')
                         con.commit()
                     else:
                         k = cur.execute('SELECT score FROM name_score WHERE name=?', (d,)).fetchall()[0][0]
-                        cur.execute(f"UPDATE name_score SET score = {k + 30} WHERE name = '{d}'")
-                        con.commit()
+                        if k != 0:
+                            cur.execute(f"UPDATE name_score SET score = {k - 15} WHERE name = '{d}'")
+                            con.commit()
 
     def disabled(self):  # скрытие всего интерфейса окна подготовки к игре
         for i in self.text:
