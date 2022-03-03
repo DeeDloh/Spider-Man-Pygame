@@ -248,7 +248,7 @@ class Rules_Screen:  # класс окна подготовки к игре
                     terminate()
 
             self.screen.blit(fon, (0, 0))
-            screen.blit(table, (150, 200))
+            self.screen.blit(table, (150, 200))
             winner = pole.update(events)
             if type(winner) is list:
                 break
